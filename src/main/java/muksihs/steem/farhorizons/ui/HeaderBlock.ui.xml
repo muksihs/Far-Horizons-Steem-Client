@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:gwt.material.design.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<m:MaterialPanel hideOn="NONE" style='text-align: left;'>
+		<m:MaterialHeader >
+			<m:MaterialNavBar hideOn="NONE" style="margin-bottom: 12px; background-color: darkblue;">
+				<m:MaterialNavSection hideOn="NONE" float="LEFT">
+					<m:MaterialButton style="margin: 2px; margin-left: 8px; background-color: darkblue;"
+						ui:field="account" iconType="ACCOUNT_CIRCLE" iconPosition="LEFT"
+						text="Account" />
+				</m:MaterialNavSection>
+				<m:MaterialNavSection float="RIGHT">
+					<m:MaterialNavBrand ui:field="navBrand" style="margin: 6px;"
+						text="Far Horizons Steem Client" />
+					<m:MaterialNavContent style="margin: 4px;">
+						<m:MaterialLabel text="for steemit - version: "></m:MaterialLabel>
+						<m:MaterialLabel text="0000000" ui:field="version"></m:MaterialLabel>
+						<m:MaterialLabel text=" - created by "></m:MaterialLabel>
+						<m:MaterialLink target="_blank"
+							href="https://www.steemit.com/@muksihs" text="@muksihs"></m:MaterialLink>
+					</m:MaterialNavContent>
+				</m:MaterialNavSection>
+			</m:MaterialNavBar>
+		</m:MaterialHeader>
+		<m:html.Hr></m:html.Hr>
+	</m:MaterialPanel>
+</ui:UiBinder> 

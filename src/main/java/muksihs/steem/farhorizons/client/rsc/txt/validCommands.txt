@@ -1,0 +1,102 @@
+#Valid commands by section
+#empty lines and lines starting with '#' are ignored.
+
+#A '*' designates a section
+#A '=' designates the start of a group with description. Use a blank '=' to end a group.
+
+#Any plain text following a command will be used to display "brief" command help.
+#The resource "commandHelp.txt" contains more detailed help per command as HTML fragments.
+
+*COMBAT
+
+	Attack
+	Battle
+	Engage
+	Haven
+	Hide
+	Hijack
+	Summary
+	Target
+	Withdraw
+
+*PRE-DEPARTURE
+
+    Ally
+	Base
+	Deep
+	Destroy
+	Disband
+	Enemy
+	Install
+	Land
+	Message
+	Name
+	Neutral
+	Orbit
+	Repair
+	Scan
+	Send
+	Transfer
+	Unload
+	Zzz
+
+*JUMPS
+
+	Jump
+	Move
+	Pjump
+	Visited
+	Wormhole
+
+*PRODUCTION
+
+	Ally
+	Ambush
+	Build
+	Continue
+	Develop
+	Enemy
+	Estimate
+	Hide
+	Ibuild
+	Icontinue
+	Intercept
+	Neutral
+	Production
+	Recycle
+	Research
+	Shipyard
+	Upgrade
+
+*POST-ARRIVAL
+
+	Ally
+	Auto
+	Deep
+	Destroy
+	Enemy
+	Land
+	Message
+	Name
+	Neutral
+	Orbit
+	Repair
+	Scan
+	Send
+	Teach
+	Telescope
+	Terraform
+	Transfer
+	Zzz
+
+*STRIKES
+
+	Attack
+	Battle
+	Engage
+	Haven
+	Hide
+	Hijack
+	Summary
+	Target
+	Withdraw

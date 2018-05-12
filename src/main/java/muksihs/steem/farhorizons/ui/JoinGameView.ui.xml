@@ -1,0 +1,68 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:gwt.material.design.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<m:MaterialPanel style="font-size: 150%;">
+		<m:html.Heading size="H4">SPECIES INFORMATION</m:html.Heading>
+		<m:html.Div></m:html.Div>
+		<m:html.Text text=" - Do not use commas!
+		 - Stick with LATIN letters please.
+		 - Species name must at least 7 chars but no more than 31 chars.
+		 - Other fields may not be more than 31 chars."></m:html.Text>
+		<m:html.Hr></m:html.Hr>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Species Name:</m:MaterialLabel>
+			<m:MaterialTextBox ui:field="speciesName"
+				style="margin-left: 8px; display: inline-block; min-width: 260px;">
+			</m:MaterialTextBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Home Planet Name:</m:MaterialLabel>
+			<m:MaterialTextBox ui:field="homeName"
+				style="margin-left: 8px; display: inline-block; min-width: 260px;"></m:MaterialTextBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Government Name:</m:MaterialLabel>
+			<m:MaterialTextBox ui:field="govName"
+				style="margin-left: 8px; display: inline-block; min-width: 260px;"></m:MaterialTextBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Government Type:</m:MaterialLabel>
+			<m:MaterialTextBox ui:field="govType"
+				style="margin-left: 8px; display: inline-block; min-width: 260px;"></m:MaterialTextBox>
+		</m:MaterialPanel>
+		<m:html.Hr></m:html.Hr>
+		<m:html.Heading size="H4">POINTS SPREAD</m:html.Heading>
+		<m:html.Text text=" - Must add up to 15!"></m:html.Text>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Military:</m:MaterialLabel>
+			<m:MaterialIntegerBox ui:field="ml"
+				style="margin-left: 8px; display: inline-block; min-width: 120px;"
+				label="Military:">1</m:MaterialIntegerBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Gravitics:</m:MaterialLabel>
+			<m:MaterialIntegerBox ui:field="gv"
+				style="margin-left: 8px; display: inline-block; min-width: 120px;"
+				label="Gravitics:">1</m:MaterialIntegerBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Life Support:</m:MaterialLabel>
+			<m:MaterialIntegerBox ui:field="ls"
+				style="margin-left: 8px; display: inline-block; min-width: 120px;"
+				label="Life Support:">1</m:MaterialIntegerBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialLabel style="display: inline-block; min-width: 260px;">Biology:</m:MaterialLabel>
+			<m:MaterialIntegerBox ui:field="bi"
+				style="margin-left: 8px; display: inline-block; min-width: 120px;"
+				label="Biology:">1</m:MaterialIntegerBox>
+		</m:MaterialPanel>
+		<m:MaterialPanel>
+			<m:MaterialButton ui:field="btnJoin" style="margin: 8px; background-color: darkblue;"
+				text="JOIN GAME"></m:MaterialButton>
+		</m:MaterialPanel>
+	</m:MaterialPanel>
+</ui:UiBinder>

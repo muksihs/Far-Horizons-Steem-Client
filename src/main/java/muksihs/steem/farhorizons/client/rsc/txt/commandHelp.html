@@ -1,0 +1,1506 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Command Help</title>
+</head>
+<body>
+	Each HTML help fragment must be wrapped with &lt;!-- section:command
+	begin --&gt; and &lt;!-- section:command end --&gt;. Both the section
+	and command names must be in lowercase with no spaces joined together
+	with a colon.
+
+	<!-- combat:attack begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ATTACK SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Attack opponent &ldquo;SP xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>ATTACK SP n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Attack field-distorted species number
+						&ldquo;n&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>ATTACK 0</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Attack all declared enemies</em></li>
+			</ul></li>
+	</ul>
+	<!-- combat:attack end -->
+
+	<!-- combat:battle begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>BATTLE x y z</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Set the location for a battle</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		Before a battle can begin, you must specify its location. This is done
+		with the
+		<kbd>BATTLE</kbd>
+		command. For example:
+	</p>
+	<p>
+		<samp>
+			START COMBAT<br /> ; Place combat orders here.<br /> <br /> &nbsp;
+			&nbsp; ;The following combat orders will be for the attack on the
+			Romulan home<br /> &nbsp; &nbsp; ; planet in their star system at 12
+			4 3...<br /> &nbsp; &nbsp; &nbsp; &nbsp; BATTLE&nbsp; 12 4 3<br />
+			<br /> &nbsp; &nbsp; &nbsp; &nbsp; ;additional combat orders follow
+			the BATTLE order<br /> <br /> END
+		</samp>
+	</p>
+	<p>During a battle, it's possible for cargo to be destroyed if
+		damage passes through the shields of a ship. Since this happens quite
+		frequently, it is NEVER reported in the combat log. You will only know
+		about it after the battle when you notice that some or all of the
+		cargo is missing.</p>
+	<p>
+		Note that only the X, Y and Z coordinates are given. Any planets that
+		are to be involved will depend on later commands. A
+		<kbd>BATTLE</kbd>
+		command MUST be specified before any other combat orders that will
+		apply to the specified location. In effect, a
+		<kbd>BATTLE</kbd>
+		command states that a battle MAY take place at the specified location,
+		and that all of your forces at that location are on alert. A single
+		<kbd>BATTLE</kbd>
+		command may be followed by other combat commands, and all such
+		commands will apply to the location specified in the most recently
+		executed
+		<kbd>BATTLE</kbd>
+		command. Thus, if you are attacking more than one star system in a
+		turn, then each set of combat orders will be preceded by an
+		appropriate
+		<kbd>BATTLE</kbd>
+		order.
+	</p>
+	<p>
+		To indicate your intentions at a battle, use one or more
+		<kbd>ENGAGE</kbd>
+		commands.
+	</p>
+	<!-- combat:battle end -->
+
+	<!-- combat:engage begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ENGAGE n [p]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Specify combat engagement option &ldquo;n&rdquo;
+						and optional planet number &ldquo;p&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		To indicate your intentions at a battle, use one or more
+		<kbd>ENGAGE</kbd>
+		commands. Each
+		<kbd>ENGAGE</kbd>
+		command requires an &ldquo;option&rdquo; argument to indicate the
+		nature of the engagement you are willing to take part in. Some also
+		require an additional argument which specifies the planet where the
+		option will apply. You may specify more than one
+		<kbd>ENGAGE</kbd>
+		command per battle. Here are your options:
+	</p>
+	<dl>
+		<dt>0 - Defense in-place.</dt>
+		<dd>
+			Do not attack anyone unless they are clearly hostile. If fighting
+			does start, fight only if the battle moves to your current location.
+			If battle moves to a new location, do not move with it. This is the
+			default option if you do not provide any
+			<kbd>ENGAGE</kbd>
+			orders.
+		</dd>
+		<dt>1 - Deep space defense.</dt>
+		<dd>Do not fight unless the opponent is clearly hostile. If a
+			fight is inevitable, try to keep the battle away from your planets.
+			This option should be used if you have planets you wish to defend and
+			you wish to keep the battle away from them to avoid damage to
+			civilians and civilian structures. (Remember, &ldquo;deep
+			space&rdquo; is anywhere in a star system that is not within fighting
+			range of a planet.)</dd>
+		<dt>2 - Planet defense.</dt>
+		<dd>This option requires an additional argument indicating the
+			planet you are willing to defend. This command should be given for
+			each planet you wish to defend.</dd>
+		<dt>3 - Deep space fight.</dt>
+		<dd>Attack the enemy in deep space and destroy as many ships as
+			possible. If the enemy is not willing to meet you in deep space, then
+			no battle will take place. (Remember, &ldquo;deep space&rdquo; is
+			anywhere in a star system that is not within fighting range of a
+			planet.)</dd>
+		<dt>4 - Planet attack.</dt>
+		<dd>This option requires a second argument to indicate the number
+			of the planet that you wish to attack. This type of attack will do as
+			much damage as possible to military targets, while minimizing damage
+			to civilians and infrastructure. With this option, an attacker will
+			have to contend with starbases, planetary defenses, and ships on the
+			ground or in orbit.</dd>
+		<dt>5 - Planet bombardment.</dt>
+		<dd>This option requires an additional argument to indicate the
+			number of the planet that you wish to attack. Start with a planetary
+			attack. After you have successfully destroyed all of the enemy's
+			ships, starbases, and planetary defenses, bombard the specified
+			planet doing as much damage as possible to the population and
+			infrastructure.</dd>
+		<dt>6 - Germ warfare.</dt>
+		<dd>This option requires an additional argument to indicate the
+			number of the planet that you wish to attack. Start with a planetary
+			attack. After you have successfully destroyed all of the enemy's
+			ships, starbases, and planetary defenses, attempt to destroy all
+			enemy life on the planet using germ warfare.</dd>
+		<dt>7 - Besiege planet.</dt>
+		<dd>This option requires an additional argument to indicate the
+			number of the planet that you wish to attack. Start with a planetary
+			attack. After you have successfully destroyed all of the enemy's
+			ships, starbases, and planetary defenses, besiege the planet and
+			extort &lsquo;taxes&rsquo;.</dd>
+	</dl>
+	<p>
+		If you give an
+		<kbd>ENGAGE</kbd>
+		order whose option is 3 or greater, you must also specify the name or
+		names of the enemy you want to fight with. For this, use the
+		<kbd>ATTACK</kbd>
+		command.
+	</p>
+	<!-- combat:engage end -->
+
+	<!-- combat:haven begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>HAVEN x y x</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Set rendezvous point for ships that withdraw from
+						combat</em></li>
+			</ul></li>
+	</ul>
+	<!-- combat:haven end -->
+
+	<!-- combat:hide begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>HIDE ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Keep &ldquo;ship&rdquo; out of combat unless you
+						start to lose the battle</em></li>
+			</ul></li>
+	</ul>
+	<!-- combat:hide end -->
+
+	<!-- combat:hijack begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>HIJACK SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Hijack opponent &ldquo;SP xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>HIJACK SP n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Hijack field-distorted species number
+						&ldquo;n&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>HIJACK 0</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Hijack all declared enemies</em></li>
+			</ul></li>
+	</ul>
+	<!-- combat:hijack end -->
+
+	<!-- combat:summary begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SUMMARY</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Provide only a brief summary of combat results,
+						instead of listing every single hit and miss</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		A complete log of the the fighting that takes place during a battle
+		will be sent to the players of the species involved. The log describes
+		who fires on whom, and whether or not the shot was successful. Since a
+		battle contains many misses, these logs can become very long and very
+		boring. If you want to receive only a brief summary of the results,
+		then provide a
+		<kbd>SUMMARY</kbd>
+		command after the
+		<kbd>BATTLE</kbd>
+		command. The
+		<kbd>SUMMARY</kbd>
+		command has no arguments. Here is an example:
+	</p>
+	<p>
+		<samp>
+			START COMBAT<br /> ; Place combat orders here.<br /> <br /> &nbsp;
+			&nbsp; &nbsp; &nbsp;BATTLE &nbsp;4 12 3<br /> &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp;SUMMARY &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			;Log only the important stuff.<br /> &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp;ENGAGE &nbsp; &nbsp; &nbsp; &nbsp;1 &nbsp; &nbsp; &nbsp; ;Try
+			to keep fight, if any, away from<br /> &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp;; colonies.<br /> &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp;ENGAGE &nbsp; &nbsp; &nbsp; &nbsp;2 4 &nbsp; &nbsp; ;Protect
+			planet #4.<br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;etc.<br /> <br />
+			END<br />
+
+		</samp>
+	</p>
+	<p>
+		If a
+		<kbd>SUMMARY</kbd>
+		command is used, then only the important combat news will be sent to
+		the player. Various failures, misses, and hits that do not completely
+		destroy a ship or planetary defenses will not be reported.
+	</p>
+	<p>The gamemaster always has the option of turning on summary mode
+		if he feels that the logs are too long.</p>
+	<!-- combat:summary end -->
+
+	<!-- combat:target begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TARGET n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Concentrate fire on target type &ldquo;n&rdquo;
+						during combat</em></li>
+			</ul></li>
+	</ul>
+	<!-- combat:target end -->
+
+	<!-- combat:withdraw begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>WITHDRAW n1 n2 n3</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Set conditions for withdrawing from combat</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		During the battle, your ships will have the option of withdrawing
+		based on conditions that you set using the
+		<kbd>WITHDRAW</kbd>
+		command. If ships do withdraw, they will jump out of the sector to
+		safety. You can also specify a rendezvous point using the
+		<kbd>HAVEN</kbd>
+		command. The
+		<kbd>HAVEN</kbd>
+		command has the following format:
+	</p>
+	<p>
+		<samp>
+			&nbsp; &nbsp; Haven &nbsp; &nbsp; x y z <br />
+		</samp>
+	</p>
+	<p>
+		where
+		<kbd>x</kbd>
+		,
+		<kbd>y</kbd>
+		, and
+		<kbd>z</kbd>
+		are coordinates where a ship should jump to if it decides to withdraw
+		from battle. If no
+		<kbd>HAVEN</kbd>
+		order is given, then the ship will jump to a randomly selected
+		location very close to the battle sector. If a ship withdraws, then
+		any explicit
+		<kbd>JUMP</kbd>
+		orders that appear in the jump section of your orders will be ignored.
+		(It is assumed that a ship that withdraws from combat is likely to be
+		damaged and that a normal, longer jump will be too dangerous.)
+	</p>
+	<p>
+		You may specify the conditions of withdrawal using the
+		<kbd>WITHDRAW</kbd>
+		command. Here is the format:
+	</p>
+	<p>
+		<samp>
+			&nbsp; &nbsp;Withdraw &nbsp; &nbsp;n1 n2 n3<br />
+		</samp>
+	</p>
+	<p>where:</p>
+	<ul style="margin-left: 1em;">
+		<li>n1 = maximum acceptable transport age</li>
+		<li>n2 = maximum acceptable warship age</li>
+		<li>n3 = maximum acceptable fleet loss percentage</li>
+	</ul>
+	<p>The &ldquo;fleet loss percentage&rdquo; includes ships that have
+		been destroyed or that have already withdrawn.</p>
+	<p>Here's an example:</p>
+	<p>
+		<samp>
+			START COMBAT<br /> ; Place combat orders here.<br /> <br /> &nbsp;
+			&nbsp; ;The following combat orders will be for the attack on the
+			Romulan home<br /> &nbsp; &nbsp;; planet in their star system at 12
+			4 3...<br /> <br /> &nbsp; &nbsp; &nbsp; &nbsp;Battle &nbsp; &nbsp;
+			&nbsp; &nbsp; &nbsp;12 4 3<br /> &nbsp; &nbsp; &nbsp; &nbsp;Haven
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 10 3 3<br /> &nbsp; &nbsp; &nbsp;
+			&nbsp;Withdraw &nbsp; &nbsp; &nbsp; &nbsp;10 25 50<br /> <br /> END
+			<br />
+		</samp>
+	</p>
+	<p>In the above example, any ships that decide to withdraw will
+		attempt to jump to sector 10 3 3. An individual transport will
+		withdraw if its age is greater than 10. An individual warship will
+		withdraw if its age is greater than 25. The entire fleet will withdraw
+		if at least 50% of the ships in the fleet have either been destroyed
+		or have already withdrawn.</p>
+	<p>For the special case where the transport value is EXACTLY zero,
+		transports will only withdraw if the entire fleet withdraws. For the
+		special case where the fleet value is EXACTLY zero, the fleet will
+		attempt to withdraw as soon as possible after ANY battle begins.</p>
+	<p>
+		If no
+		<kbd>WITHDRAW</kbd>
+		order is given, the default will be:
+	</p>
+	<p>
+		<samp> &nbsp; &nbsp;Withdraw &nbsp; &nbsp;0 50 50 </samp>
+	</p>
+	<p>Thus, the default is to fight to the death.</p>
+	<p>If a ship withdraws during the strike phase, then the ship name
+		will contain the designation "WD" in the status report. These ships
+		will jump automatically in the jump phase of the next turn, and any
+		explicit jump orders will be ignored.</p>
+	<!-- combat:withdraw end -->
+
+	<!-- pre-departure:ally begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ALLY SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare species &ldquo;SP xxx&rdquo; to be an ally</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:ally end -->
+
+	<!-- pre-departure:base begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>BASE [n] s, base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build or increase size of starbase
+						&ldquo;base&rdquo; using &ldquo;n&rdquo; starbase units from
+						&ldquo;s&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:base end -->
+
+	<!-- pre-departure:deep begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>DEEP ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Move a &ldquo;ship&rdquo; that is currently landed
+						or orbiting into deep space</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		The
+		<kbd>LAND</kbd>
+		,
+		<kbd>ORBIT</kbd>
+		, and
+		<kbd>DEEP</kbd>
+		commands are used for moving ships within a star system. The
+		<kbd>LAND</kbd>
+		command indicates that the ship should land on the surface of a
+		planet. The
+		<kbd>ORBIT</kbd>
+		command indicates that the ship should enter orbit around a planet.
+		The
+		<kbd>ORBIT</kbd>
+		command can also be used to have a starbase towed from orbit around
+		one planet into an orbit around another planet in the same star
+		system. The
+		<kbd>DEEP</kbd>
+		command may be used to move a ship that is currently landed or
+		orbiting into deep space. A
+		<kbd>DEEP</kbd>
+		order may NOT be given for a starbase.
+	</p>
+
+	<!-- pre-departure:deep end -->
+
+	<!-- pre-departure:destroy begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>DESTROY ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Destroy &ldquo;ship&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>DESTROY base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Destroy starbase &ldquo;base&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:destroy end -->
+
+	<!-- pre-departure:disband begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>DISBAND PL xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Disband colony &ldquo;PL xxx&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:disband end -->
+
+	<!-- pre-departure:enemy begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ENEMY SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare species &ldquo;SP xxx&rdquo; to be an
+						enemy</em></li>
+			</ul></li>
+		<li><kbd>ENEMY n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare all species to be enemies</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:enemy end -->
+
+	<!-- pre-departure:install begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>INSTALL n ab pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Install &ldquo;n&rdquo; <kbd>IU</kbd>s or <kbd>AU</kbd>s
+						on planet &ldquo;pl&rdquo;
+				</em></li>
+			</ul></li>
+		<li><kbd>INSTALL pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Install all available <kbd>IU</kbd>s and <kbd>AU</kbd>s
+						on planet &ldquo;pl&rdquo;
+				</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:install end -->
+
+	<!-- pre-departure:land begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>LAND ship,pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; land on planet in same
+						star system</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:land end -->
+
+	<!-- pre-departure:message begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>MESSAGE SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Send a message to species &ldquo;SP xxx&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<h4>Each message must end with a ZZZ on a line by itself!</h4>
+	<!-- pre-departure:message end -->
+
+	<!-- pre-departure:name begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>NAME x y z p PL name</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Give &ldquo;name&rdquo; to planet &ldquo;p&rdquo;
+						at location "x y z"</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:name end -->
+
+	<!-- pre-departure:neutral begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>NEUTRAL SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare neutrality towards species &ldquo;SP
+						xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>NEUTRAL n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare neutrality towards all species</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:neutral end -->
+
+	<!-- pre-departure:orbit begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ORBIT ship,pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; orbit planet in same star
+						system</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:orbit end -->
+
+	<!-- pre-departure:repair begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>REPAIR ship,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Repair &ldquo;ship&rdquo; using &ldquo;n&rdquo;
+						onboard damage repair units</em></li>
+			</ul></li>
+		<li><kbd>REPAIR base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Repair &ldquo;base&rdquo; using &ldquo;n&rdquo;
+						onboard damage repair units</em></li>
+			</ul></li>
+		<li><kbd>REPAIR x y z [age]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Repair as many ships/starbases as possible in
+						sector x y z, pooling damage repair units but do not reduce age
+						below &ldquo;age&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:repair end -->
+
+	<!-- pre-departure:scan begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SCAN ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; do a scan of its current
+						location</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:scan end -->
+
+	<!-- pre-departure:send begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SEND n SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Send &ldquo;n&rdquo; economic units to species
+						&ldquo;SP xxx&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:send end -->
+
+	<!-- pre-departure:transfer begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TRANSFER n ab s,d</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Transfer &ldquo;n&rdquo; items of class
+						&ldquo;ab&rdquo; from &ldquo;s&rdquo; to &ldquo;d&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:transfer end -->
+
+	<!-- pre-departure:unload begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>UNLOAD ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Transfer all <kbd>CU</kbd>s, <kbd>IU</kbd>s, and <kbd>AU</kbd>s
+						from &ldquo;ship&rdquo; or
+				</em></li>
+			</ul></li>
+
+		<li><kbd>UNLOAD base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>starbase &ldquo;base&rdquo; to the planet it is at
+						and install as</em></li>
+			</ul></li>
+	</ul>
+	many
+	<kbd>IU</kbd>
+	s and
+	<kbd>AU</kbd>
+	s as possible
+
+	<!-- pre-departure:unload end -->
+
+	<!-- pre-departure:zzz begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ZZZ</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Terminate a <kbd>MESSAGE</kbd></em></li>
+			</ul></li>
+	</ul>
+	<!-- pre-departure:zzz end -->
+
+
+	<!-- jumps:jump begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>JUMP ship,loc</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; jump to destination
+						&ldquo;loc&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- jumps:jump end -->
+
+	<!-- jumps:move begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>MOVE ship, x y z</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Move &ldquo;ship&rdquo; up to one parsec</em></li>
+			</ul></li>
+		<li><kbd>MOVE base, x y z</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Tow starbase &ldquo;base&rdquo; up to one parsec</em></li>
+			</ul></li>
+	</ul>
+	<!-- jumps:move end -->
+
+	<!-- jumps:pjump begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>PJUMP ship,loc,bas</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; jump to destination
+						&ldquo;loc&rdquo; via jump portals on starbase &ldquo;bas&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- jumps:pjump end -->
+
+	<!-- jumps:visited begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>VISITED x y z</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Mark a star system as having been visited, even if
+						you have not actually been there.</em></li>
+			</ul></li>
+	</ul>
+	<!-- jumps:visited end -->
+
+	<!-- jumps:wormhole begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>WORMHOLE ship [,pl]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; jump to opposite end of
+						wormhole and orbit planet &ldquo;pl&rdquo; on arrival</em></li>
+			</ul></li>
+		<li><kbd>WORMHOLE base [,pl]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have starbase &ldquo;base&rdquo; jump to opposite
+						end of wormhole and orbit planet &ldquo;pl&rdquo; on arrival</em></li>
+			</ul></li>
+	</ul>
+	<!-- jumps:wormhole end -->
+
+
+
+	<!-- production:ally begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ALLY SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare species &ldquo;SP xxx&rdquo; to be an ally</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:ally end -->
+
+	<!-- production:ambush begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>AMBUSH n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Spend &ldquo;n&rdquo; in preparation for ambush</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:ambush end -->
+
+	<!-- production:build begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>BUILD n ab</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build &ldquo;n&rdquo; items of class
+						&ldquo;ab&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>BUILD ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build &ldquo;ship&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>BUILD ship,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Start building &ldquo;ship&rdquo;, spend only
+						&ldquo;n&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>BUILD base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Start building starbase &ldquo;base&rdquo;, spend
+						&ldquo;n&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:build end -->
+
+	<!-- production:continue begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>CONTINUE ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Finish construction of &ldquo;ship&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>CONTINUE ship,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Continue construction on &ldquo;ship&rdquo;, spend
+						only &ldquo;n&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>CONTINUE base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Increase size of starbase &ldquo;base&rdquo;,
+						spend &ldquo;n&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:continue end -->
+
+	<!-- production:develop begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>DEVELOP [n]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build <kbd>CU</kbd>s, <kbd>IU</kbd>s, and <kbd>AU</kbd>s
+						for producing planet but do not spend more than &ldquo;n&rdquo;
+				</em></li>
+			</ul></li>
+		<li><kbd>DEVELOP [n] pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build <kbd>CU</kbd>s, <kbd>IU</kbd>s, and <kbd>AU</kbd>s
+						for colony planet &ldquo;pl&rdquo; in same sector but do not spend
+						more than &ldquo;n&rdquo;
+				</em></li>
+			</ul></li>
+		<li><kbd>DEVELOP [n] pl, ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build <kbd>CU</kbd>s, <kbd>IU</kbd>s, and <kbd>AU</kbd>s
+						for colony planet &ldquo;pl&rdquo; and load units onto
+						&ldquo;ship&rdquo; but do not spend more than &ldquo;n&rdquo;
+				</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:develop end -->
+
+	<!-- production:enemy begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ENEMY SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare species &ldquo;SP xxx&rdquo; to be an
+						enemy</em></li>
+			</ul></li>
+		<li><kbd>ENEMY n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare all species to be enemies</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:enemy end -->
+
+	<!-- production:estimate begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ESTIMATE SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Estimate tech levels of species &ldquo;SP
+						xxx&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:estimate end -->
+
+	<!-- production:hide begin -->
+
+	<ul style="margin-left: 1em;">
+		<li><kbd>HIDE</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Actively hide this planet from alien observation</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:hide end -->
+
+	<!-- production:ibuild begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>IBUILD SP xxx,n ab</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build &ldquo;n&rdquo; items of class
+						&ldquo;ab&rdquo; for species &ldquo;SP xx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>IBUILD SP xxx,ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build &ldquo;ship&rdquo; for species &ldquo;SP
+						xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>IBUILD SP xxx,base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Build starbase &ldquo;base&rdquo; for species
+						&ldquo;SP xxx&rdquo;, spend &ldquo;n&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:ibuild end -->
+
+	<!-- production:icontinue begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ICONTINUE SP xxx, ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Finish construction of &ldquo;ship&rdquo; for
+						species &ldquo;SP xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>ICONTINUE SP xxx, base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Increase size of starbase &ldquo;base&rdquo; for
+						species &ldquo;SP xxx&rdquo;, spend &ldquo;n&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:icontinue end -->
+
+	<!-- production:intercept begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>INTERCEPT n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Spend &ldquo;n&rdquo; in preparation for
+						interception</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:intercept end -->
+
+	<!-- production:neutral begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>NEUTRAL SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare neutrality towards species &ldquo;SP
+						xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>NEUTRAL n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare neutrality towards all species</em></li>
+			</ul></li>
+	</ul>
+
+	<!-- production:neutral end -->
+
+	<!-- production:production begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>PRODUCTION PL name</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Start production on planet &ldquo;name&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:production end -->
+
+	<!-- production:recycle begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>RECYCLE n ab</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Recycle &ldquo;n&rdquo; items of class
+						&ldquo;ab&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>RECYCLE ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Recycle &ldquo;ship&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>RECYCLE base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Recycle starbase &ldquo;base&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:recycle end -->
+
+	<!-- production:research begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>RESEARCH n tech</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Spend &ldquo;n&rdquo; on research in technology
+						&ldquo;tech&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:research end -->
+
+	<!-- production:shipyard begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SHIPYARD</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Increase shipyard capacity by one.</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:shipyard end -->
+
+	<!-- production:upgrade begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>UPGRADE ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Upgrade &ldquo;ship&rdquo; to age zero</em></li>
+			</ul></li>
+		<li><kbd>UPGRADE base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Upgrade starbase &ldquo;base&rdquo; to age zero</em></li>
+			</ul></li>
+		<li><kbd>UPGRADE ship,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Upgrade &ldquo;ship&rdquo;, spend &ldquo;n&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>UPGRADE base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Upgrade starbase &ldquo;base&rdquo;, spend
+						&ldquo;n&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- production:upgrade end -->
+
+
+
+	<!-- post-arrival:ally begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ALLY SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare species &ldquo;SP xxx&rdquo; to be an ally</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:ally end -->
+
+	<!-- post-arrival:auto begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>AUTO</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Automatically generate <em>maybe</em> sensible
+						orders for next turn
+				</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:auto end -->
+
+	<!-- post-arrival:deep begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>DEEP ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Move a &ldquo;ship&rdquo; that is currently landed
+						or orbiting into deep space.</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		The
+		<kbd>LAND</kbd>
+		,
+		<kbd>ORBIT</kbd>
+		, and
+		<kbd>DEEP</kbd>
+		commands are used for moving ships within a star system. The
+		<kbd>LAND</kbd>
+		command indicates that the ship should land on the surface of a
+		planet. The
+		<kbd>ORBIT</kbd>
+		command indicates that the ship should enter orbit around a planet.
+		The
+		<kbd>ORBIT</kbd>
+		command can also be used to have a starbase towed from orbit around
+		one planet into an orbit around another planet in the same star
+		system. The
+		<kbd>DEEP</kbd>
+		command may be used to move a ship that is currently landed or
+		orbiting into deep space. A
+		<kbd>DEEP</kbd>
+		order may NOT be given for a starbase.
+	</p>
+
+	<!-- post-arrival:deep end -->
+
+	<!-- post-arrival:destroy begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>DESTROY ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Destroy &ldquo;ship&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>DESTROY base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Destroy starbase &ldquo;base&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:destroy end -->
+
+	<!-- post-arrival:enemy begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ENEMY SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare species &ldquo;SP xxx&rdquo; to be an
+						enemy</em></li>
+			</ul></li>
+		<li><kbd>ENEMY n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare all species to be enemies</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:enemy end -->
+
+	<!-- post-arrival:land begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>LAND ship,pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; land on planet in same
+						star system</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:land end -->
+
+	<!-- post-arrival:message begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>MESSAGE SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Send a message to species &ldquo;sp&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<h4>Each message must end with a ZZZ on a line by itself!</h4>
+	<!-- post-arrival:message end -->
+
+	<!-- post-arrival:name begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>NAME x y z p PL name</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Give &ldquo;name&rdquo; to planet &ldquo;p&rdquo;
+						at location "x y z"</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:name end -->
+
+	<!-- post-arrival:neutral begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>NEUTRAL SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare neutrality towards species &ldquo;SP
+						xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>NEUTRAL n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Declare neutrality towards all species</em></li>
+			</ul></li>
+	</ul>
+
+	<!-- post-arrival:neutral end -->
+
+	<!-- post-arrival:orbit begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ORBIT ship,pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; orbit planet in same star
+						system</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:orbit end -->
+
+	<!-- post-arrival:repair begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>REPAIR ship,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Repair &ldquo;ship&rdquo; using &ldquo;n&rdquo;
+						onboard damage repair units</em></li>
+			</ul></li>
+		<li><kbd>REPAIR base,n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Repair &ldquo;base&rdquo; using &ldquo;n&rdquo;
+						onboard damage repair units</em></li>
+			</ul></li>
+		<li><kbd>REPAIR x y z [age]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Repair as many ships/starbases as possible in
+						sector x y z, pooling damage repair units but do not reduce age
+						below &ldquo;age&rdquo;</em></li>
+			</ul></li>
+	</ul>
+
+	<!-- post-arrival:repair end -->
+
+	<!-- post-arrival:scan begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SCAN ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Have &ldquo;ship&rdquo; do a scan of its current
+						location</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:scan end -->
+
+	<!-- post-arrival:send begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SEND n SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Send &ldquo;n&rdquo; economic units to species
+						&ldquo;sp&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:send end -->
+
+	<!-- post-arrival:teach begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TEACH tech [n] SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Transfer knowledge of technology
+						&ldquo;tech&rdquo; to species &ldquo;sp&rdquo; to maximum tech
+						level &ldquo;n&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:teach end -->
+
+	<!-- post-arrival:telescope begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TELESCOPE base</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Operate gravitic telescope on starbase
+						&ldquo;base&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:telescope end -->
+
+	<!-- post-arrival:terraform begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TERRAFORM [n] pl</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Terraform planet &ldquo;pl&rdquo; using
+						&ldquo;n&rdquo; TPs</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:terraform end -->
+
+	<!-- post-arrival:transfer begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TRANSFER n ab s,d</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Transfer &ldquo;n&rdquo; items of class
+						&ldquo;ab&rdquo; from &ldquo;s&rdquo; to &ldquo;d&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:transfer end -->
+
+	<!-- post-arrival:zzz begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ZZZ</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Terminate a MESSAGE</em></li>
+			</ul></li>
+	</ul>
+	<!-- post-arrival:zzz end -->
+
+	<!-- strikes:attack begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ATTACK</kbd>SP xxx
+			<ul style="margin-left: 1em;">
+				<li>Attack opponent &ldquo;SP xxx&rdquo;</li>
+			</ul></li>
+		<li><kbd>ATTACK SP n</kbd>
+			<ul style="margin-left: 1em;">
+				<li>Attack field-distorted species number &ldquo;n&rdquo;</li>
+			</ul></li>
+		<li><kbd>ATTACK 0</kbd>
+			<ul style="margin-left: 1em;">
+				<li>Attack all declared enemies</li>
+			</ul></li>
+	</ul>
+	<!-- strikes:attack end -->
+
+	<!-- strikes:battle begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>BATTLE x y z</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Set the location for a battle</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		Before a battle can begin, you must specify its location. This is done
+		with the
+		<kbd>BATTLE</kbd>
+		command. For example:
+	</p>
+	<p>
+		<samp>
+			START COMBAT<br /> ; Place combat orders here.<br /> <br /> &nbsp;
+			&nbsp; ;The following combat orders will be for the attack on the
+			Romulan home<br /> &nbsp; &nbsp; ; planet in their star system at 12
+			4 3...<br /> &nbsp; &nbsp; &nbsp; &nbsp; BATTLE&nbsp; 12 4 3<br />
+			<br /> &nbsp; &nbsp; &nbsp; &nbsp; ;additional combat orders follow
+			the BATTLE order<br /> <br /> END
+		</samp>
+	</p>
+	<p>During a battle, it's possible for cargo to be destroyed if
+		damage passes through the shields of a ship. Since this happens quite
+		frequently, it is NEVER reported in the combat log. You will only know
+		about it after the battle when you notice that some or all of the
+		cargo is missing.</p>
+	<p>
+		Note that only the X, Y and Z coordinates are given. Any planets that
+		are to be involved will depend on later commands. A
+		<kbd>BATTLE</kbd>
+		command MUST be specified before any other combat orders that will
+		apply to the specified location. In effect, a
+		<kbd>BATTLE</kbd>
+		command states that a battle MAY take place at the specified location,
+		and that all of your forces at that location are on alert. A single
+		<kbd>BATTLE</kbd>
+		command may be followed by other combat commands, and all such
+		commands will apply to the location specified in the most recently
+		executed
+		<kbd>BATTLE</kbd>
+		command. Thus, if you are attacking more than one star system in a
+		turn, then each set of combat orders will be preceded by an
+		appropriate
+		<kbd>BATTLE</kbd>
+		order.
+	</p>
+	<p>
+		To indicate your intentions at a battle, use one or more
+		<kbd>ENGAGE</kbd>
+		commands.
+	</p>
+	<!-- strikes:battle end -->
+
+	<!-- strikes:engage begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>ENGAGE n [p]</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Specify combat engagement option &ldquo;n&rdquo;
+						and optional planet number &ldquo;p&rdquo;</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		To indicate your intentions at a battle, use one or more
+		<kbd>ENGAGE</kbd>
+		commands. Each
+		<kbd>ENGAGE</kbd>
+		command requires an &ldquo;option&rdquo; argument to indicate the
+		nature of the engagement you are willing to take part in. Some also
+		require an additional argument which specifies the planet where the
+		option will apply. You may specify more than one
+		<kbd>ENGAGE</kbd>
+		command per battle. Here are your options:
+	</p>
+	<dl>
+		<dt>0 - Defense in-place.</dt>
+		<dd>
+			Do not attack anyone unless they are clearly hostile. If fighting
+			does start, fight only if the battle moves to your current location.
+			If battle moves to a new location, do not move with it. This is the
+			default option if you do not provide any
+			<kbd>ENGAGE</kbd>
+			orders.
+		</dd>
+		<dt>1 - Deep space defense.</dt>
+		<dd>Do not fight unless the opponent is clearly hostile. If a
+			fight is inevitable, try to keep the battle away from your planets.
+			This option should be used if you have planets you wish to defend and
+			you wish to keep the battle away from them to avoid damage to
+			civilians and civilian structures. (Remember, &ldquo;deep
+			space&rdquo; is anywhere in a star system that is not within fighting
+			range of a planet.)</dd>
+		<dt>2 - Planet defense.</dt>
+		<dd>This option requires an additional argument indicating the
+			planet you are willing to defend. This command should be given for
+			each planet you wish to defend.</dd>
+		<dt>3 - Deep space fight.</dt>
+		<dd>Attack the enemy in deep space and destroy as many ships as
+			possible. If the enemy is not willing to meet you in deep space, then
+			no battle will take place. (Remember, &ldquo;deep space&rdquo; is
+			anywhere in a star system that is not within fighting range of a
+			planet.)</dd>
+		<dt>4 - Planet attack.</dt>
+		<dd>This option requires a second argument to indicate the number
+			of the planet that you wish to attack. This type of attack will do as
+			much damage as possible to military targets, while minimizing damage
+			to civilians and infrastructure. With this option, an attacker will
+			have to contend with starbases, planetary defenses, and ships on the
+			ground or in orbit.</dd>
+		<dt>5 - Planet bombardment.</dt>
+		<dd>This option requires an additional argument to indicate the
+			number of the planet that you wish to attack. Start with a planetary
+			attack. After you have successfully destroyed all of the enemy's
+			ships, starbases, and planetary defenses, bombard the specified
+			planet doing as much damage as possible to the population and
+			infrastructure.</dd>
+		<dt>6 - Germ warfare.</dt>
+		<dd>This option requires an additional argument to indicate the
+			number of the planet that you wish to attack. Start with a planetary
+			attack. After you have successfully destroyed all of the enemy's
+			ships, starbases, and planetary defenses, attempt to destroy all
+			enemy life on the planet using germ warfare.</dd>
+		<dt>7 - Besiege planet.</dt>
+		<dd>This option requires an additional argument to indicate the
+			number of the planet that you wish to attack. Start with a planetary
+			attack. After you have successfully destroyed all of the enemy's
+			ships, starbases, and planetary defenses, besiege the planet and
+			extort &lsquo;taxes&rsquo;.</dd>
+	</dl>
+	<p>
+		If you give an
+		<kbd>ENGAGE</kbd>
+		order whose option is 3 or greater, you must also specify the name or
+		names of the enemy you want to fight with. For this, use the
+		<kbd>ATTACK</kbd>
+		command.
+	</p>
+
+	<!-- strikes:engage end -->
+
+	<!-- strikes:haven begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>HAVEN x y x</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Set rendezvous point for ships that withdraw from
+						combat</em></li>
+			</ul></li>
+	</ul>
+	<!-- strikes:haven end -->
+
+	<!-- strikes:hide begin -->
+
+	<ul style="margin-left: 1em;">
+		<li><kbd>HIDE ship</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Keep &ldquo;ship&rdquo; out of combat unless you
+						start to lose the battle</em></li>
+			</ul></li>
+	</ul>
+	<!-- strikes:hide end -->
+
+	<!-- strikes:hijack begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>HIJACK SP xxx</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Hijack opponent &ldquo;SP xxx&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>HIJACK SP n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Hijack field-distorted species number
+						&ldquo;n&rdquo;</em></li>
+			</ul></li>
+		<li><kbd>HIJACK 0</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Hijack all declared enemies</em></li>
+			</ul></li>
+	</ul>
+	<!-- strikes:hijack end -->
+
+	<!-- strikes:summary begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>SUMMARY</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Provide only a brief summary of combat results,
+						instead of listing every single hit and miss</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		A complete log of the the fighting that takes place during a battle
+		will be sent to the players of the species involved. The log describes
+		who fires on whom, and whether or not the shot was successful. Since a
+		battle contains many misses, these logs can become very long and very
+		boring. If you want to receive only a brief summary of the results,
+		then provide a
+		<kbd>SUMMARY</kbd>
+		command after the
+		<kbd>BATTLE</kbd>
+		command. The
+		<kbd>SUMMARY</kbd>
+		command has no arguments. Here is an example:
+	</p>
+	<p>
+		<samp>
+			START COMBAT<br /> ; Place combat orders here.<br /> <br /> &nbsp;
+			&nbsp; &nbsp; &nbsp;BATTLE &nbsp;4 12 3<br /> &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp;SUMMARY &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			;Log only the important stuff.<br /> &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp;ENGAGE &nbsp; &nbsp; &nbsp; &nbsp;1 &nbsp; &nbsp; &nbsp; ;Try
+			to keep fight, if any, away from<br /> &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp; &nbsp;; colonies.<br /> &nbsp; &nbsp; &nbsp; &nbsp;
+			&nbsp;ENGAGE &nbsp; &nbsp; &nbsp; &nbsp;2 4 &nbsp; &nbsp; ;Protect
+			planet #4.<br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;etc.<br /> <br />
+			END<br />
+
+		</samp>
+	</p>
+	<p>
+		If a
+		<kbd>SUMMARY</kbd>
+		command is used, then only the important combat news will be sent to
+		the player. Various failures, misses, and hits that do not completely
+		destroy a ship or planetary defenses will not be reported.
+	</p>
+	<p>The gamemaster always has the option of turning on summary mode
+		if he feels that the logs are too long.</p>
+
+	<!-- strikes:summary end -->
+
+	<!-- strikes:target begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>TARGET n</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Concentrate fire on target type &ldquo;n&rdquo;
+						during combat</em></li>
+			</ul></li>
+	</ul>
+	<!-- strikes:target end -->
+
+	<!-- strikes:withdraw begin -->
+	<ul style="margin-left: 1em;">
+		<li><kbd>WITHDRAW n1 n2 n3</kbd>
+			<ul style="margin-left: 1em;">
+				<li><em>Set conditions for withdrawing from combat</em></li>
+			</ul></li>
+	</ul>
+	<p>
+		During the battle, your ships will have the option of withdrawing
+		based on conditions that you set using the
+		<kbd>WITHDRAW</kbd>
+		command. If ships do withdraw, they will jump out of the sector to
+		safety. You can also specify a rendezvous point using the
+		<kbd>HAVEN</kbd>
+		command. The
+		<kbd>HAVEN</kbd>
+		command has the following format:
+	</p>
+	<p>
+		<samp>
+			&nbsp; &nbsp; Haven &nbsp; &nbsp; x y z <br />
+		</samp>
+	</p>
+	<p>
+		where
+		<kbd>x</kbd>
+		,
+		<kbd>y</kbd>
+		, and
+		<kbd>z</kbd>
+		are coordinates where a ship should jump to if it decides to withdraw
+		from battle. If no
+		<kbd>HAVEN</kbd>
+		order is given, then the ship will jump to a randomly selected
+		location very close to the battle sector. If a ship withdraws, then
+		any explicit
+		<kbd>JUMP</kbd>
+		orders that appear in the jump section of your orders will be ignored.
+		(It is assumed that a ship that withdraws from combat is likely to be
+		damaged and that a normal, longer jump will be too dangerous.)
+	</p>
+	<p>
+		You may specify the conditions of withdrawal using the
+		<kbd>WITHDRAW</kbd>
+		command. Here is the format:
+	</p>
+	<p>
+		<samp>
+			&nbsp; &nbsp;Withdraw &nbsp; &nbsp;n1 n2 n3<br />
+		</samp>
+	</p>
+	<p>where:</p>
+	<ul style="margin-left: 1em;">
+		<li>n1 = maximum acceptable transport age</li>
+		<li>n2 = maximum acceptable warship age</li>
+		<li>n3 = maximum acceptable fleet loss percentage</li>
+	</ul>
+	<p>The &ldquo;fleet loss percentage&rdquo; includes ships that have
+		been destroyed or that have already withdrawn.</p>
+	<p>Here's an example:</p>
+	<p>
+		<samp>
+			START COMBAT<br /> ; Place combat orders here.<br /> <br /> &nbsp;
+			&nbsp;;The following combat orders will be for the attack on the
+			Romulan home<br /> &nbsp; &nbsp;; planet in their star system at 12
+			4 3...<br /> <br /> &nbsp; &nbsp; &nbsp; &nbsp;Battle &nbsp; &nbsp;
+			&nbsp; &nbsp; &nbsp;12 4 3<br /> &nbsp; &nbsp; &nbsp; &nbsp;Haven
+			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 10 3 3<br /> &nbsp; &nbsp; &nbsp;
+			&nbsp;Withdraw &nbsp; &nbsp; &nbsp; &nbsp;10 25 50<br /> <br /> END
+			<br />
+		</samp>
+	</p>
+	<p>In the above example, any ships that decide to withdraw will
+		attempt to jump to sector 10 3 3. An individual transport will
+		withdraw if its age is greater than 10. An individual warship will
+		withdraw if its age is greater than 25. The entire fleet will withdraw
+		if at least 50% of the ships in the fleet have either been destroyed
+		or have already withdrawn.</p>
+	<p>For the special case where the transport value is EXACTLY zero,
+		transports will only withdraw if the entire fleet withdraws. For the
+		special case where the fleet value is EXACTLY zero, the fleet will
+		attempt to withdraw as soon as possible after ANY battle begins.</p>
+	<p>
+		If no
+		<kbd>WITHDRAW</kbd>
+		order is given, the default will be:
+	</p>
+	<p>
+		<samp> &nbsp; &nbsp;Withdraw &nbsp; &nbsp;0 50 50 </samp>
+	</p>
+	<p>Thus, the default is to fight to the death.</p>
+	<p>If a ship withdraws during the strike phase, then the ship name
+		will contain the designation "WD" in the status report. These ships
+		will jump automatically in the jump phase of the next turn, and any
+		explicit jump orders will be ignored.</p>
+	<!-- strikes:withdraw end -->
+
+
+
+</body>
+</html>
