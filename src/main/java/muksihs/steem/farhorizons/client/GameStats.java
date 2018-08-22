@@ -3,7 +3,7 @@ package muksihs.steem.farhorizons.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import muksihs.steem.farhorizons.shared.ExtractDetailedGameInfo.PlanetInfo;
+import muksihs.steem.farhorizons.shared.PlanetInfo;
 import muksihs.steem.farhorizons.shared.ShipLocation;
 
 public class GameStats {

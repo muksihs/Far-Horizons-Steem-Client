@@ -38,6 +38,7 @@ import muksihs.steem.farhorizons.shared.Consts;
 import muksihs.steem.farhorizons.shared.ExtractDetailedGameInfo;
 import muksihs.steem.farhorizons.shared.JoinGameInfo;
 import muksihs.steem.farhorizons.shared.OrderFormPart;
+import muksihs.steem.farhorizons.shared.PlanetInfo;
 import muksihs.steem.farhorizons.shared.SteemContent;
 import muksihs.steem.farhorizons.shared.SteemPostingInfo;
 import muksihs.steem.farhorizons.ui.MainView;
@@ -305,7 +306,42 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 				ordersTemplate.add(new OrderFormPart(section, ";Place " + section.toLowerCase() + " orders here."));
 			}
 		}
-
+		OrderFormPart productionSection = ordersTemplate.get(3);
+		String orders = productionSection.getOrders();
+		for (PlanetInfo info: gameStats.getPlanetInfo()) {
+			if (info.getName()==null||info.getName().trim().isEmpty()) {
+				continue;
+			}
+			if (info.getLsn()==null||info.getLsn().trim().isEmpty()) {
+				continue;
+			}
+			String marker = "PRODUCTION "+info.getName();
+			GWT.log(marker);
+			if (!orders.contains(marker)) {
+				continue;
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.append("\n");
+			sb.append(marker);
+			sb.append("\n");
+			sb.append("    ; LSN = ");
+			String lsn = info.getLsn();
+			if (lsn==null || lsn.trim().isEmpty()) {
+				sb.append("???");
+			} else {
+				sb.append(lsn.trim());
+			}
+			sb.append("\n");
+			if (!info.getInventory().isEmpty()) {
+				for (String inventory: info.getInventory()) {
+					sb.append("    ; ");
+					sb.append(inventory.trim());
+					sb.append("\n");
+				}
+			}
+			orders = orders.replace(marker, sb.toString());
+		}
+		productionSection.setOrders(orders);
 		fireEvent(new Event.ShowOrdersForm(ordersTemplate));
 	}
 
@@ -816,6 +852,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			body.append(part.getSection());
 			body.append("\n");
 			String orders = part.getOrders();
+			orders = orders.replaceAll("\\s*;[^\n]*\n", "\n");
 			body.append(orders);
 			if (!orders.endsWith("\n")) {
 				body.append("\n");

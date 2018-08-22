@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 
-import elemental2.dom.DomGlobal;
 import muksihs.steem.farhorizons.client.GameStats;
 import muksihs.steem.farhorizons.client.GameStats.PlanetScan;
 import muksihs.steem.farhorizons.client.GameStats.ScanInfo;
@@ -141,7 +140,6 @@ public class ExtractDetailedGameInfo {
 			String[] stats = StringUtils.split(tmp,",");
 			if (stats!=null&&stats.length!=0) {
 				for (String stat: stats) {
-					GWT.log("stat: "+stat);
 					if (stat.startsWith("A")) {
 						ship.setAge(stat.substring(1).trim());
 						continue;
@@ -380,27 +378,28 @@ public class ExtractDetailedGameInfo {
 		String tmp;
 
 		/**
-		 * parse chunks for PRODUCTION results
+		 * parse chunks for Planet STATUS results
 		 */
 		tmp = StringUtils.substringAfter(report, DIVIDER);
 		if (tmp.contains(" PLANET:") || tmp.contains(" COLONY:")) {
-			ListIterator<String> iLines = Arrays.asList(StringUtils.split(tmp, "\n")).listIterator();
-			lines: while (iLines.hasNext()) {
+			
+			ListIterator<String> iLines = Arrays.asList(StringUtils.splitPreserveAllTokens(tmp, "\n")).listIterator();
+			planetScan: while (iLines.hasNext()) {
 				String line = iLines.next().replace("\t", " ").trim();
+				if (!iLines.hasNext()) {
+					break planetScan;
+				}
 				if (!line.contains(": ")) {
-					continue lines;
+					continue planetScan;
 				}
 				if (!tmp.contains(" PLANET:") && !tmp.contains(" COLONY:")) {
-					continue;
-				}
-				if (!iLines.hasNext()) {
-					continue;
+					continue planetScan;
 				}
 				String planet = StringUtils.substringAfter(line, ":").trim();
 				line = iLines.next().replace("\t", " ").trim();
 				if (!line.startsWith("Coordinates:") || !line.contains("planet number")) {
 					iLines.previous();
-					continue lines;
+					continue planetScan;
 				}
 				line = StringUtils.substringAfter(line, "x =").trim();
 				String x = StringUtils.substringBefore(line, ",");
@@ -409,17 +408,55 @@ public class ExtractDetailedGameInfo {
 				line = StringUtils.substringAfter(line, "z =").trim();
 				String z = StringUtils.substringBefore(line, ",");
 				String p = StringUtils.substringAfter(line, "planet number").trim();
+				
+				PlanetInfo planetInfo = new PlanetInfo();
+				planets.add(planetInfo);
+				
 				StarSystem starSystem = new StarSystem();
 				starSystem.setX(parseInteger(x));
 				starSystem.setY(parseInteger(y));
 				starSystem.setZ(parseInteger(z));
-				PlanetInfo planetInfo = new PlanetInfo();
+				
 				planetInfo.setStarSystem(starSystem);
 				planetInfo.setPlanetNo(parseInteger(p));
 				planetInfo.setName(planet);
 				planetInfo.setColony(true);
-				planets.add(planetInfo);
-			}
+				
+				planetInfo.setLsn("");
+				GWT.log("DETAILS: "+planetInfo.getName());
+				detailScan: while (iLines.hasNext()) {
+					line = iLines.next().replace("\t", " ").trim();
+					if (!iLines.hasNext()) {
+						break planetScan;
+					}
+					if (line.contains(" PLANET:") || line.contains(" COLONY:")) {
+						iLines.previous();
+						continue planetScan;
+					}
+					if (line.contains("(LSN =")) {
+						String lsn = StringUtils.substringAfter(line, "(LSN =");
+						lsn = StringUtils.substringBefore(lsn, ")").trim();
+						planetInfo.setLsn(lsn);
+						GWT.log(" -- LSN: "+lsn);
+						continue detailScan;
+					}
+					if (line.startsWith("Planetary inventory:")) {
+						List<String> inventory = planetInfo.getInventory();
+						scanInventory: while (iLines.hasNext()) {
+							line = iLines.next().replace("\t", " ").trim();
+							if (line.contains(" PLANET:") || line.contains(" COLONY:")) {
+								iLines.previous();
+								continue planetScan;
+							}
+							if (line.isEmpty()) {
+								break scanInventory;
+							}
+							GWT.log(" -- "+line);
+							inventory.add(line);
+						}
+					}
+				}
+ 			}
 		}
 
 		/**
@@ -507,76 +544,6 @@ public class ExtractDetailedGameInfo {
 			}
 		}
 		return planets;
-	}
-
-	public static class PlanetInfo {
-		private StarSystem starSystem;
-		private int planetNo;
-		private String name;
-		private boolean isColony;
-
-		public StarSystem getStarSystem() {
-			return starSystem;
-		}
-
-		public void setStarSystem(StarSystem starSystem) {
-			this.starSystem = starSystem;
-		}
-
-		public int getPlanetNo() {
-			return planetNo;
-		}
-
-		public void setPlanetNo(int planetNo) {
-			this.planetNo = planetNo;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public boolean isColony() {
-			return isColony;
-		}
-
-		public void setColony(boolean isColony) {
-			this.isColony = isColony;
-		}
-	}
-
-	public static class StarSystem {
-		private int x;
-		private int y;
-
-		public int getX() {
-			return x;
-		}
-
-		public void setX(int x) {
-			this.x = x;
-		}
-
-		public int getY() {
-			return y;
-		}
-
-		public void setY(int y) {
-			this.y = y;
-		}
-
-		public int getZ() {
-			return z;
-		}
-
-		public void setZ(int z) {
-			this.z = z;
-		}
-
-		private int z;
 	}
 
 	private static GameStats parseSpeciesInformation(String report) {
