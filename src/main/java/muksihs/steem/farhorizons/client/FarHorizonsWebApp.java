@@ -315,7 +315,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			if (info.getLsn()==null||info.getLsn().trim().isEmpty()) {
 				continue;
 			}
-			String marker = "PRODUCTION "+info.getName();
+			final String marker = "PRODUCTION "+info.getName();
 			GWT.log(marker);
 			if (!orders.contains(marker)) {
 				continue;
@@ -339,7 +339,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 					sb.append("\n");
 				}
 			}
-			orders = orders.replace(marker, sb.toString());
+			orders = orders.replaceAll(marker+"\\s*?\n", sb.toString());
 		}
 		productionSection.setOrders(orders);
 		fireEvent(new Event.ShowOrdersForm(ordersTemplate));
