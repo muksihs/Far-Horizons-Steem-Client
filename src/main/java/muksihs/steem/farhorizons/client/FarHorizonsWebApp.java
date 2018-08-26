@@ -861,9 +861,9 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 				body.append(order);
 				body.append("\n");
 			}
-			body.append("END\n");
+			body.append("END\n\n");
 		}
-		final String orders = body.toString().replaceAll("\n\n+", "\n\n");
+		final String orders = body.toString();
 
 		String secretMessage = "<html>" + basicEscape(LZSEncoding.compressToUTF16(orders)) + "</html>";
 		SteemCallback<CommentResult> cb = new SteemCallback<CommentResult>() {
