@@ -342,6 +342,19 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			orders = orders.replaceAll(marker+"\\s*?\n", sb.toString());
 		}
 		productionSection.setOrders(orders);
+		//space fix each of the order sections
+		for (OrderFormPart section: ordersTemplate) {
+			StringBuilder sb = new StringBuilder();
+			for (String order: section.getOrders().split("\n")) {
+				order = order.trim();
+				if (order.isEmpty()) {
+					continue;
+				}
+				sb.append(order);
+				sb.append("\n");
+			}
+			section.setOrders(sb.toString());
+		}
 		fireEvent(new Event.ShowOrdersForm(ordersTemplate));
 	}
 
