@@ -326,7 +326,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			sb.append(marker);
 			sb.append("\n");
 			sb.append(";----------------------------------------\n");
-			sb.append("    ; LSN = ");
+			sb.append("; LSN = ");
 			String lsn = info.getLsn();
 			if (lsn==null || lsn.trim().isEmpty()) {
 				sb.append("???");
