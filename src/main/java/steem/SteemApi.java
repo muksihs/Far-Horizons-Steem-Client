@@ -1,5 +1,8 @@
 package steem;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.fusesource.restygwt.client.JsonEncoderDecoder.DecodingException;
 

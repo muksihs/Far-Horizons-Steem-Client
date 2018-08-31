@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gwt.core.shared.GWT;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Discussions {
@@ -158,18 +159,21 @@ public class Discussions {
 	}
 	@JsonIgnoreProperties(ignoreUnknown=true)
 	public static class JsonMetadata {
+		@JsonProperty("game-data")
+		private String gameData;
 		private Map<String, Object> _properties=new HashMap<>();
 		private List<String> tags=new ArrayList<>();
 		private List<String> users=new ArrayList<>();
 		@JsonAnyGetter
-		protected Map<String, Object> _get() {
+		public Map<String, Object> get() {
 			return _properties;
 		}
-		public Object _get(String key) {
+		public Object get(String key) {
 			return _properties.get(key);
 		}
 		@JsonAnySetter
-		public void _put(String key, Object value) {
+		protected void put(String key, Object value) {
+			GWT.log("metadata#put: "+key);
 			_properties.put(key, value);
 		}
 		public List<String> getTags() {
@@ -185,6 +189,12 @@ public class Discussions {
 
 		public void setUsers(List<String> users) {
 			this.users = users;
+		}
+		public String getGameData() {
+			return gameData;
+		}
+		public void setGameData(String gameData) {
+			this.gameData = gameData;
 		}
 	}
 	

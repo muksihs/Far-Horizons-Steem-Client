@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -57,6 +58,8 @@ import steem.model.discussion.Discussions.JsonMetadata;
 
 public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, ValueChangeHandler<String> {
 
+	private static final String KEY_GAME_DATA = "game-data";
+
 	private static final String DEFAULT_USER = "default-user";
 
 	private RootPanel rp;
@@ -99,10 +102,10 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 					try {
 						metadata = SteemApi.Util.jsonMetadataCodec.decode(discussion.getJsonMetadataRaw());
 					} catch (DecodingException e) {
+						GWT.log(e.getMessage(), e);
 						metadata = null;
 					}
 					if (metadata != null && metadata.getTags() != null && metadata.getTags().contains(getGameId())) {
-						DomGlobal.console.log("JSON METADATA RAW: " + discussion.getJsonMetadataRaw());
 						found = true;
 						boolean isMostRecentTurn = event.getPermlink().equals(discussion.getPermlink());
 						if (!isMostRecentTurn) {
@@ -404,6 +407,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 						}
 					}
 				} catch (DecodingException e) {
+					GWT.log(e.getMessage(), e);
 					DomGlobal.console.log(e.getMessage());
 					metadata = new JsonMetadata();
 				}
@@ -413,17 +417,28 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 					return;
 				}
 				String msg = content.getBody();
-				String secretMsg = StringUtils.substringBetween(msg, "<div id='secret-message'>", "</div>");
-				if (secretMsg == null) {
-					fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
-					return;
+				String secretMsg;
+				String gameData;
+				String compressedGameData = metadata.getGameData();
+				if (compressedGameData == null) {
+					secretMsg = StringUtils.substringBetween(msg, "<div id='secret-message'>", "</div>");
+					if (secretMsg == null) {
+						fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
+						return;
+					}
+					gameData = LZSEncoding.decompressFromUTF16(basicUnescape(secretMsg));
+					if (gameData == null) {
+						fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
+						return;
+					}
+				} else {
+					gameData = LZSEncoding.decompressFromBase64(compressedGameData);
+					if (gameData == null) {
+						fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
+						return;
+					}
 				}
-				String decompressFromUTF16 = LZSEncoding.decompressFromUTF16(basicUnescape(secretMsg));
-				if (decompressFromUTF16 == null) {
-					fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
-					return;
-				}
-				String report = StringUtils.substringBetween(decompressFromUTF16, "@" + username + " BEGIN",
+				String report = StringUtils.substringBetween(gameData, "@" + username + " BEGIN",
 						"@" + username + " END");
 				if (report == null) {
 					fireEvent(new Event.ShowTurnResult(
