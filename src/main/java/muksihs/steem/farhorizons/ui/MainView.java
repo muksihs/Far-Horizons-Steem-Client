@@ -136,7 +136,12 @@ public class MainView extends EventBusComposite {
 			List<String> lines = new ArrayList<>();
 			lines: while (iLines.hasNext()) {
 				String line = iLines.next();
-				if (line.trim().toLowerCase().startsWith("jump")) {
+				String lcLine = line.trim().toLowerCase();
+				if (lcLine.startsWith(";jump")) {
+					line = line.substring(1);
+					lcLine = lcLine.substring(1);
+				}
+				if (lcLine.startsWith("jump")) {
 					String jump=line;
 					if (jump.contains(";")){
 						jump=StringUtils.substringBefore(jump, ";");
@@ -155,7 +160,14 @@ public class MainView extends EventBusComposite {
 						if (line.contains(";")) {
 							line=StringUtils.substringBeforeLast(line, ";");
 						}
-						line=";"+line+"; === UNCOMMENT AND SUPPLY A DESTINATION";
+						ships: for (ShipLocation ship: gameStats.getShipLocations()) {
+							String noJump = "jump "+ship.getName()+", ???";
+							noJump=StringUtils.normalizeSpace(noJump.trim().toLowerCase());
+							if (noJump.equals(jump)) {
+								line=";"+line.trim()+"; "+ship.getPlanet();
+								break ships;
+							}
+						}
 					}
 				}
 				lines.add(line);				
