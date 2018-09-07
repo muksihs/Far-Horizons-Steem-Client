@@ -882,6 +882,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			if (!orders.endsWith("\n")) {
 				orders += "\n";
 			}
+			body.append(orders);
 			body.append("END\n\n");
 		}
 		final String orders = body.toString();
