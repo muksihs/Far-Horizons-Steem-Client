@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -57,8 +56,6 @@ import steem.model.discussion.Discussions.Discussion;
 import steem.model.discussion.Discussions.JsonMetadata;
 
 public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, ValueChangeHandler<String> {
-
-	private static final String KEY_GAME_DATA = "game-data";
 
 	private static final String DEFAULT_USER = "default-user";
 
@@ -348,18 +345,18 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 		}
 		productionSection.setOrders(orders);
 		//space fix each of the order sections
-		for (OrderFormPart section: ordersTemplate) {
-			StringBuilder sb = new StringBuilder();
-			for (String order: section.getOrders().split("\n")) {
-				order = order.trim();
-				if (order.isEmpty()) {
-					continue;
-				}
-				sb.append(order);
-				sb.append("\n");
-			}
-			section.setOrders(sb.toString());
-		}
+//		for (OrderFormPart section: ordersTemplate) {
+//			StringBuilder sb = new StringBuilder();
+//			for (String order: section.getOrders().split("\n")) {
+//				order = order.trim();
+//				if (order.isEmpty()) {
+//					continue;
+//				}
+//				sb.append(order);
+//				sb.append("\n");
+//			}
+//			section.setOrders(sb.toString());
+//		}
 		fireEvent(new Event.ShowOrdersForm(ordersTemplate));
 	}
 
