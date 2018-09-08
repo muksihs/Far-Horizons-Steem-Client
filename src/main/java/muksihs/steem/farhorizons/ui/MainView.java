@@ -268,10 +268,10 @@ public class MainView extends EventBusComposite {
 			helpers.add(shipsBtn);
 		}
 
-		List<ScanInfo> scannedPlanets = new ArrayList<>(gameStats.getScannedPlanets());
-		if (!gameStats.getScannedPlanets().isEmpty()) {
+		List<ScanInfo> scannedPlanets = gameStats.getScannedPlanets();
+		if (!scannedPlanets.isEmpty()) {
 			boolean showButton = false;
-			infoScanCheck: for (ScanInfo scanned : gameStats.getScannedPlanets()) {
+			infoScanCheck: for (ScanInfo scanned : scannedPlanets) {
 				for (PlanetScan scannedPlanet : scanned.getPlanets()) {
 					if (isBlank(scannedPlanet.getName())) {
 						showButton = true;
@@ -284,7 +284,7 @@ public class MainView extends EventBusComposite {
 				namePlanetsBtn.setMargin(2);
 				namePlanetsBtn.getElement().getStyle().setBackgroundColor("darkred");
 				namePlanetsBtn
-						.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats.getScannedPlanets())));
+						.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(scannedPlanets)));
 				helpers.add(namePlanetsBtn);
 			}
 		}
