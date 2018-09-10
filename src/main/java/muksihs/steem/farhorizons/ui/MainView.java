@@ -112,7 +112,7 @@ public class MainView extends EventBusComposite {
 				sb.append(cmd);
 				sb.append("\n");
 			}
-			part.setValue(sb.toString());
+			part.setValue(sb.toString(), true);
 			part.triggerAutoResize();
 		}
 	}
@@ -210,9 +210,9 @@ public class MainView extends EventBusComposite {
 				input.setBorder("2px dashed gray");
 				input.setDataAttribute("section", sectionName);
 				if (orderCache.containsKey(sectionName)) {
-					input.setValue(orderCache.get(sectionName));
+					input.setValue(orderCache.get(sectionName), false);
 				} else {
-					input.setValue(part.getOrders());
+					input.setValue(part.getOrders(), true);
 				}
 				input.addValueChangeHandler(cacheOrders(part.getSection()));
 				input.setResizeRule(ResizeRule.AUTO);
