@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTML;
@@ -41,6 +42,7 @@ import muksihs.steem.farhorizons.client.FarHorizonsWebApp;
 import muksihs.steem.farhorizons.client.GameStats;
 import muksihs.steem.farhorizons.client.GameStats.PlanetScan;
 import muksihs.steem.farhorizons.client.GameStats.ScanInfo;
+import muksihs.steem.farhorizons.client.cache.OrderFormCache;
 import muksihs.steem.farhorizons.client.rsc.OrderFormResources;
 import muksihs.steem.farhorizons.shared.ExtractDetailedGameInfo;
 import muksihs.steem.farhorizons.shared.OrderFormPart;
@@ -79,9 +81,11 @@ public class MainView extends EventBusComposite {
 	private MaterialPanel orderForm;
 	private GameStats gameStats;
 
+	private OrderFormCache orderCache;
 	@EventHandler
 	protected void updateGameStatus(Event.UpdateGameStats event) {
 		this.gameStats = event.getGameStats();
+		orderCache = new OrderFormCache(gameStats);
 	}
 
 	@EventHandler
@@ -112,10 +116,10 @@ public class MainView extends EventBusComposite {
 			part.triggerAutoResize();
 		}
 	}
-	
+
 	@EventHandler
 	protected void clearOutOrders(Event.LoadTurnResults event) {
-		orderForm=null;
+		orderForm = null;
 		orderFormParts.clear();
 	}
 
@@ -126,13 +130,15 @@ public class MainView extends EventBusComposite {
 		}
 		/*
 		 * comment bogus auto created jump commands that have ships jumping to a system
-		 * they are alreading located at, also comment out jump commands with "???" as the destination
+		 * they are alreading located at, also comment out jump commands with "???" as
+		 * the destination
 		 */
 		for (OrderFormPart part : event.getOrderFormParts()) {
 			if (!part.getSection().equalsIgnoreCase("jumps")) {
 				continue;
 			}
-			ListIterator<String> iLines = Arrays.asList(StringUtils.splitPreserveAllTokens(part.getOrders(), "\n")).listIterator();
+			ListIterator<String> iLines = Arrays.asList(StringUtils.splitPreserveAllTokens(part.getOrders(), "\n"))
+					.listIterator();
 			List<String> lines = new ArrayList<>();
 			lines: while (iLines.hasNext()) {
 				String line = iLines.next();
@@ -142,35 +148,35 @@ public class MainView extends EventBusComposite {
 					lcLine = lcLine.substring(1);
 				}
 				if (lcLine.startsWith("jump")) {
-					String jump=line;
-					if (jump.contains(";")){
-						jump=StringUtils.substringBefore(jump, ";");
+					String jump = line;
+					if (jump.contains(";")) {
+						jump = StringUtils.substringBefore(jump, ";");
 					}
-					jump=jump.replace(",", ", ").trim().toLowerCase();
+					jump = jump.replace(",", ", ").trim().toLowerCase();
 					jump = StringUtils.normalizeSpace(jump);
-					ships: for (ShipLocation ship: gameStats.getShipLocations()) {
-						String badJump = "jump "+ship.getName()+", "+ship.getPlanet();
-						badJump=StringUtils.normalizeSpace(badJump.trim().toLowerCase());
+					ships: for (ShipLocation ship : gameStats.getShipLocations()) {
+						String badJump = "jump " + ship.getName() + ", " + ship.getPlanet();
+						badJump = StringUtils.normalizeSpace(badJump.trim().toLowerCase());
 						if (badJump.equals(jump)) {
-							line=";"+line+"; === ALREADY AT THIS LOCATION";
+							line = ";" + line + "; === ALREADY AT THIS LOCATION";
 							break ships;
 						}
 					}
 					if (jump.contains(", ???")) {
 						if (line.contains(";")) {
-							line=StringUtils.substringBeforeLast(line, ";");
+							line = StringUtils.substringBeforeLast(line, ";");
 						}
-						ships: for (ShipLocation ship: gameStats.getShipLocations()) {
-							String noJump = "jump "+ship.getName()+", ???";
-							noJump=StringUtils.normalizeSpace(noJump.trim().toLowerCase());
+						ships: for (ShipLocation ship : gameStats.getShipLocations()) {
+							String noJump = "jump " + ship.getName() + ", ???";
+							noJump = StringUtils.normalizeSpace(noJump.trim().toLowerCase());
 							if (noJump.equals(jump)) {
-								line=";"+line.trim()+"; "+ship.getPlanet();
+								line = ";" + line.trim() + "; " + ship.getPlanet();
 								break ships;
 							}
 						}
 					}
 				}
-				lines.add(line);				
+				lines.add(line);
 			}
 			part.setOrders(StringUtils.join(lines, "\n"));
 			break;
@@ -203,7 +209,12 @@ public class MainView extends EventBusComposite {
 				input.setPadding(10);
 				input.setBorder("2px dashed gray");
 				input.setDataAttribute("section", sectionName);
-				input.setValue(part.getOrders());
+				if (orderCache.containsKey(sectionName)) {
+					input.setValue(orderCache.get(sectionName));
+				} else {
+					input.setValue(part.getOrders());
+				}
+				input.addValueChangeHandler(cacheOrders(part.getSection()));
 				input.setResizeRule(ResizeRule.AUTO);
 				input.setOverflow(Overflow.AUTO);
 				input.triggerAutoResize();
@@ -236,13 +247,12 @@ public class MainView extends EventBusComposite {
 		submitPanel.setTextAlign(TextAlign.RIGHT);
 		submitPanel.setMarginTop(2);
 
-		
 		loadPreviousOrdersBtn = new MaterialButton("LOAD PREVIOUS ORDERS");
 		loadPreviousOrdersBtn.setMargin(2);
 		loadPreviousOrdersBtn.getElement().getStyle().setBackgroundColor("darkblue");
 		loadPreviousOrdersBtn.addClickHandler(this::loadPreviousOrderForm);
 		submitPanel.add(loadPreviousOrdersBtn);
-		
+
 		resetBtn = new MaterialButton("RESET ORDER FORM");
 		resetBtn.setMargin(2);
 		resetBtn.getElement().getStyle().setBackgroundColor("darkblue");
@@ -283,8 +293,7 @@ public class MainView extends EventBusComposite {
 				MaterialButton namePlanetsBtn = new MaterialButton("Unknown Planets Detected");
 				namePlanetsBtn.setMargin(2);
 				namePlanetsBtn.getElement().getStyle().setBackgroundColor("darkred");
-				namePlanetsBtn
-						.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(scannedPlanets)));
+				namePlanetsBtn.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats, scannedPlanets)));
 				helpers.add(namePlanetsBtn);
 			}
 		}
@@ -294,6 +303,12 @@ public class MainView extends EventBusComposite {
 		display.add(helpers);
 		display.add(orderForm);
 		display.add(submitPanel);
+	}
+
+	private ValueChangeHandler<String> cacheOrders(final String section) {
+		return (event) -> {
+			orderCache.put(section, event.getValue());
+		};
 	}
 
 	private static boolean isBlank(String name) {
@@ -376,14 +391,16 @@ public class MainView extends EventBusComposite {
 		orderFormParts.clear();
 		orderForm.clear();
 		orderForm = null;
+		orderCache.clear();
 		fireEvent(new Event.WantShowOrdersForm(false));
 	}
-	
+
 	private void loadPreviousOrderForm(ClickEvent event) {
 		display.clear();
 		orderFormParts.clear();
 		orderForm.clear();
 		orderForm = null;
+		orderCache.clear();
 		fireEvent(new Event.WantShowOrdersForm(true));
 	}
 

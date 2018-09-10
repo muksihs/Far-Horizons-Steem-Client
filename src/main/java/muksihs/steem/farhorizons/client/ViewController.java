@@ -36,6 +36,7 @@ import muksihs.steem.farhorizons.client.Event.ShowShipsAndBases;
 import muksihs.steem.farhorizons.client.Event.ShowShipsAndBases.SortOrder;
 import muksihs.steem.farhorizons.client.GameStats.PlanetScan;
 import muksihs.steem.farhorizons.client.GameStats.ScanInfo;
+import muksihs.steem.farhorizons.client.cache.GameState;
 import muksihs.steem.farhorizons.shared.ShipLocation;
 import muksihs.steem.farhorizons.ui.AboutUi;
 import muksihs.steem.farhorizons.ui.JoinGameView;
@@ -262,7 +263,7 @@ public class ViewController implements GlobalEventBus {
 		if (event.getScannedPlanets().isEmpty()) {
 			return;
 		}
-		GameState gameState = new GameState();
+		GameState gameState = new GameState(event.getGameStats());
 		List<MaterialTextBox> nameInputs = new ArrayList<>();
 		MaterialModal modal = new MaterialModal();
 		modal.setFontSize(175, Unit.PCT);
@@ -356,8 +357,8 @@ public class ViewController implements GlobalEventBus {
 				} else {
 					name.setDataAttribute("coordinates", planetTag);
 					nameInputs.add(name);
-					if (gameState.containsKey(FarHorizonsWebApp.getGameId() + " planet: " + planetTag)) {
-						name.setValue(gameState.get(FarHorizonsWebApp.getGameId() + " planet: " + planetTag));
+					if (gameState.containsKey(planetTag)) {
+						name.setValue(gameState.get(planetTag));
 					} else {
 						name.setValue("");
 					}
@@ -395,7 +396,7 @@ public class ViewController implements GlobalEventBus {
 				}
 				already.add(name.toLowerCase());
 				String planetTag = nameInput.getDataAttribute("coordinates");
-				gameState.put(FarHorizonsWebApp.getGameId() + " planet: " + planetTag, name);
+				gameState.put(planetTag, name);
 				nameCommands.add(planetTag + " " + name);
 			}
 			fireEvent(new Event.CommandNamesAdd(nameCommands));

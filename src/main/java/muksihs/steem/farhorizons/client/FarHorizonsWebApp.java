@@ -33,6 +33,7 @@ import com.google.web.bindery.event.shared.binder.GenericEvent;
 import blazing.chain.LZSEncoding;
 import elemental2.dom.DomGlobal;
 import muksihs.steem.farhorizons.client.cache.AccountCache;
+import muksihs.steem.farhorizons.client.cache.GameState;
 import muksihs.steem.farhorizons.client.rsc.OrderFormResources;
 import muksihs.steem.farhorizons.shared.Consts;
 import muksihs.steem.farhorizons.shared.ExtractDetailedGameInfo;
@@ -213,6 +214,8 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 
 	private void populateStatsUsing(String report) {
 		this.gameStats = ExtractDetailedGameInfo.parse(report);
+		this.gameStats.setGamePermLink(gamePermLink);
+		this.gameStats.setPlayer(username);
 		fireEvent(new Event.UpdateGameStats(gameStats));
 	}
 
@@ -344,20 +347,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			orders = orders.replaceAll(marker+"\\s*?\n", sb.toString());
 		}
 		productionSection.setOrders(orders);
-		//space fix each of the order sections
-//		for (OrderFormPart section: ordersTemplate) {
-//			StringBuilder sb = new StringBuilder();
-//			for (String order: section.getOrders().split("\n")) {
-//				order = order.trim();
-//				if (order.isEmpty()) {
-//					continue;
-//				}
-//				sb.append(order);
-//				sb.append("\n");
-//			}
-//			section.setOrders(sb.toString());
-//		}
-		fireEvent(new Event.ShowOrdersForm(ordersTemplate));
+		fireEvent(new Event.ShowOrdersForm(username, gamePermLink, ordersTemplate));
 	}
 
 	public static boolean isBlank(String text) {
@@ -522,7 +512,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 		if (isBlank(previousOrders)) {
 			return;
 		}
-		GameState gameState = new GameState();
+		GameState gameState = new GameState(gameStats);
 		ListIterator<String> iLines = Arrays.asList(StringUtils.split(previousOrders, "\n")).listIterator();
 		while (iLines.hasNext()) {
 			String line = iLines.next();
@@ -545,7 +535,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 			if (isBlank(planetTag)) {
 				continue;
 			}
-			gameState.put(FarHorizonsWebApp.getGameId() + " planet: " + planetTag.trim(), planetName.trim());
+			gameState.put(planetTag.trim(), planetName.trim());
 		}
 	}
 

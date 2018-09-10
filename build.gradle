@@ -108,8 +108,8 @@ dependencies {
 	gwt 'com.github.gwtmaterialdesign:gwt-material-themes:2.0+'
 	gwt 'com.github.gwtmaterialdesign:gwt-material-addins:2.0+'
 	
-	gwt 'com.google.elemental2:elemental2-core:1.0.0-beta-1'
-	gwt 'com.google.elemental2:elemental2-dom:1.0.0-beta-1'
+	gwt 'com.google.elemental2:elemental2-core:1.0.0-RC1'
+	gwt 'com.google.elemental2:elemental2-dom:1.0.0-RC1'
 	
 	gwt ('com.google.gwt.eventbinder:eventbinder:1.1.0') {
 		exclude module: 'gwt-user'

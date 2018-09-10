@@ -7,6 +7,8 @@ import muksihs.steem.farhorizons.shared.PlanetInfo;
 import muksihs.steem.farhorizons.shared.ShipLocation;
 
 public class GameStats {
+	private String player;
+	private String gamePermLink;
 	private String name;
 	private String govName;
 	public String getName() {
@@ -322,5 +324,17 @@ public class GameStats {
 	}
 	public void setShipLocations(List<ShipLocation> parseShips) {
 		this.shipLocations=parseShips;
+	}
+	public String getGamePermLink() {
+		return gamePermLink;
+	}
+	public void setGamePermLink(String gamePermLink) {
+		this.gamePermLink = gamePermLink;
+	}
+	public String getPlayer() {
+		return player;
+	}
+	public void setPlayer(String player) {
+		this.player = player;
 	}
 }

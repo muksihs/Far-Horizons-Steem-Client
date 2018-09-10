@@ -33,9 +33,9 @@ public interface Event {
 		}
 
 		public LoadPreviousOrders(String gamemaster, String username, String permlink) {
-			this.gamemaster=gamemaster;
-			this.username=username;
-			this.permlink=permlink;
+			this.gamemaster = gamemaster;
+			this.username = username;
+			this.permlink = permlink;
 		}
 
 	}
@@ -44,13 +44,13 @@ public interface Event {
 		public static enum SortOrder {
 			ByName, ByLocation, ByCoordinates;
 		}
-		
+
 		private final List<ShipLocation> shipLocations;
 		private final ShowShipsAndBases.SortOrder sortOrder;
 
 		public ShowShipsAndBases(List<ShipLocation> shipLocations, ShowShipsAndBases.SortOrder sortOrder) {
 			this.shipLocations = shipLocations;
-			this.sortOrder=sortOrder;
+			this.sortOrder = sortOrder;
 		}
 
 		public List<ShipLocation> getShipLocations() {
@@ -86,13 +86,19 @@ public interface Event {
 
 	public class HelperNamePlanets extends GenericEvent {
 		private final List<ScanInfo> scannedPlanets;
+		private final GameStats gameStats;
 
-		public HelperNamePlanets(List<ScanInfo> scannedPlanets) {
+		public HelperNamePlanets(GameStats gameStats, List<ScanInfo> scannedPlanets) {
 			this.scannedPlanets = scannedPlanets;
+			this.gameStats = gameStats;
 		}
 
 		public List<ScanInfo> getScannedPlanets() {
 			return scannedPlanets;
+		}
+
+		public GameStats getGameStats() {
+			return gameStats;
 		}
 
 	}
@@ -102,7 +108,7 @@ public interface Event {
 		private final String orders;
 
 		public JoinGameSubmitDone(String orders) {
-			this.orders=orders;
+			this.orders = orders;
 		}
 
 		public String getOrders() {
@@ -116,7 +122,7 @@ public interface Event {
 		private final JoinGameInfo info;
 
 		public ValidateThenSubmitJoinGame(JoinGameInfo info) {
-			this.info=info;
+			this.info = info;
 		}
 
 		public JoinGameInfo getInfo() {
@@ -134,7 +140,7 @@ public interface Event {
 		private final boolean enable;
 
 		public TurnResultsMenuEnable(boolean enable) {
-			this.enable=enable;
+			this.enable = enable;
 		}
 
 		public boolean isEnable() {
@@ -153,8 +159,8 @@ public interface Event {
 		private final String html;
 
 		public HelpMessage(String title, String html) {
-			this.title=title;
-			this.html=html;
+			this.title = title;
+			this.html = html;
 		}
 
 		public String getTitle() {
@@ -189,9 +195,11 @@ public interface Event {
 
 	public class UpdateGameStats extends GenericEvent {
 		private final GameStats gameStats;
+
 		public UpdateGameStats(GameStats gameStats) {
-			this.gameStats=gameStats;
+			this.gameStats = gameStats;
 		}
+
 		public GameStats getGameStats() {
 			return gameStats;
 		}
@@ -199,9 +207,11 @@ public interface Event {
 
 	public class EnableOrderForm extends GenericEvent {
 		private final boolean enable;
+
 		public EnableOrderForm(boolean enable) {
-			this.enable=enable;
+			this.enable = enable;
 		}
+
 		public boolean isEnable() {
 			return enable;
 		}
@@ -211,13 +221,16 @@ public interface Event {
 	public class MostRecentTurnCheck extends GenericEvent {
 		private final String permlink;
 		private final List<String> tags;
+
 		public MostRecentTurnCheck(String permlink, List<String> tags) {
-			this.permlink=permlink;
-			this.tags=tags;
+			this.permlink = permlink;
+			this.tags = tags;
 		}
+
 		public String getPermlink() {
 			return permlink;
 		}
+
 		public List<String> getTags() {
 			return tags;
 		}
@@ -235,13 +248,16 @@ public interface Event {
 	public class ShowSpeciesStatus extends GenericEvent {
 		private final String report;
 		private final GameStats gameStats;
+
 		public ShowSpeciesStatus(String report, GameStats gameStats) {
-			this.report=report;
+			this.report = report;
 			this.gameStats = gameStats;
 		}
+
 		public String getReport() {
 			return report;
 		}
+
 		public GameStats getGameStats() {
 			return gameStats;
 		}
@@ -257,7 +273,7 @@ public interface Event {
 		private final String orders;
 
 		public OrdersSubmitDone(String orders) {
-			this.orders=orders;
+			this.orders = orders;
 		}
 
 		public String getOrders() {
@@ -271,7 +287,7 @@ public interface Event {
 		private final List<OrderFormPart> orderFormSections;
 
 		public SubmitOrders(List<OrderFormPart> orderFormSections) {
-			this.orderFormSections=orderFormSections;
+			this.orderFormSections = orderFormSections;
 		}
 
 		public List<OrderFormPart> getOrderFormSections() {
@@ -282,20 +298,36 @@ public interface Event {
 
 	public class ShowOrdersForm extends GenericEvent {
 		private final List<OrderFormPart> orderFormParts;
-		public ShowOrdersForm(List<OrderFormPart> orderFormParts) {
-			this.orderFormParts=orderFormParts;
+		private final String username;
+		private final String gamePermLink;
+
+		public ShowOrdersForm(String username, String gamePermLink, List<OrderFormPart> orderFormParts) {
+			this.username = username;
+			this.gamePermLink = gamePermLink;
+			this.orderFormParts = orderFormParts;
 		}
+
 		public List<OrderFormPart> getOrderFormParts() {
 			return orderFormParts;
+		}
+
+		public String getGamePermLink() {
+			return gamePermLink;
+		}
+
+		public String getUsername() {
+			return username;
 		}
 
 	}
 
 	public class ShowTurnResult extends GenericEvent {
 		private final String report;
+
 		public ShowTurnResult(String report) {
-			this.report=report;
+			this.report = report;
 		}
+
 		public String getReport() {
 			return report;
 		}
@@ -303,13 +335,15 @@ public interface Event {
 
 	public class WantShowOrdersForm extends GenericEvent {
 		private final boolean loadPreviousOrders;
+
 		public WantShowOrdersForm(boolean loadPreviousOrders) {
-			this.loadPreviousOrders=loadPreviousOrders;
+			this.loadPreviousOrders = loadPreviousOrders;
 		}
+
 		public boolean isLoadPreviousOrders() {
 			return loadPreviousOrders;
 		}
-		
+
 	}
 
 	public class WantShowTurnResults extends GenericEvent {
@@ -321,9 +355,11 @@ public interface Event {
 
 	public class DoPost extends GenericEvent {
 		private final String title;
+
 		public DoPost(String title) {
-			this.title=title;
+			this.title = title;
 		}
+
 		public String getTitle() {
 			return title;
 		}
@@ -507,21 +543,23 @@ public interface Event {
 	public class GetAppVersion extends GenericEvent {
 
 	}
-	
+
 	public class GetMostRecentPostInfo extends GenericEvent {
 
 	}
 
 	public class SetMostRecentPostInfo extends GenericEvent {
 		private final MostRecentPostInfo info;
+
 		public SetMostRecentPostInfo(MostRecentPostInfo info) {
-			this.info=info;
+			this.info = info;
 		}
+
 		public MostRecentPostInfo getInfo() {
 			return info;
 		}
 	}
-	
+
 	public class ShowView extends GenericEvent {
 		private final View view;
 
