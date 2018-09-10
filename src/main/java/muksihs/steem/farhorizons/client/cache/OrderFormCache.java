@@ -14,9 +14,11 @@ public class OrderFormCache {
 	private final String prefix;
 	private final String userPrefix;
 	public OrderFormCache(GameStats gameStats) {
-		storage = new StorageMap(Storage.getLocalStorageIfSupported());
-		if (storage == null) {
+		Storage localStorageIfSupported = Storage.getLocalStorageIfSupported();
+		if (localStorageIfSupported == null) {
 			storage = new HashMap<>();
+		} else {
+			storage = new StorageMap(localStorageIfSupported);
 		}
 		userPrefix = gameStats.getPlayer()+"-order-form-cache-data-";
 		prefix = userPrefix+gameStats.getGamePermLink();

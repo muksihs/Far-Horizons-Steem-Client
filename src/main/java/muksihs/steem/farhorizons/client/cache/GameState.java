@@ -14,9 +14,11 @@ public class GameState {
 	private final String prefix;
 	private final String userPrefix;
 	public GameState(GameStats gameStats) {
-		storage = new StorageMap(Storage.getLocalStorageIfSupported());
-		if (storage == null) {
+		Storage localStorageIfSupported = Storage.getLocalStorageIfSupported();
+		if (localStorageIfSupported == null) {
 			storage = new HashMap<>();
+		} else {
+			storage = new StorageMap(localStorageIfSupported);
 		}
 		userPrefix = gameStats.getPlayer()+"-named-planet-cache-";
 		prefix = userPrefix+gameStats.getGamePermLink();
