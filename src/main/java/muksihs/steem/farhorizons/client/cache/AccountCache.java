@@ -29,11 +29,14 @@ public class AccountCache {
 
 	protected final Codec codec = GWT.create(Codec.class);
 	private final String prefix;
-	private Map<String, String> storage = new StorageMap(Storage.getLocalStorageIfSupported());
+	private Map<String, String> storage;
 	private Map<String, String> memCache = new HashMap<>();
 
 	public AccountCache() {
-		if (storage == null) {
+		Storage localStorageIfSupported = Storage.getLocalStorageIfSupported();
+		if (localStorageIfSupported!=null) {
+			storage = new StorageMap(localStorageIfSupported);
+		} else {
 			storage = memCache;
 		}
 		prefix = STEEM_ACCOUNT_INFO + ":";
