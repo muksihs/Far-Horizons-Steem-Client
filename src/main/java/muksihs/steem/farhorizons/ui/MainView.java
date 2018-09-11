@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
@@ -15,6 +16,7 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -216,7 +218,7 @@ public class MainView extends EventBusComposite {
 					input.setValue(part.getOrders(), true);
 				}
 				input.addValueChangeHandler(cacheOrdersValueChangeHandler(part.getSection(), input));
-				input.addChangeHandler(cacheOrdersChangeHandler(part.getSection(), input));
+				input.addKeyPressHandler(cacheOrdersKeyPressHandler(part.getSection(), input));
 				input.setResizeRule(ResizeRule.AUTO);
 				input.setOverflow(Overflow.AUTO);
 				input.triggerAutoResize();
@@ -307,18 +309,18 @@ public class MainView extends EventBusComposite {
 		display.add(submitPanel);
 	}
 
-	private ValueChangeHandler<String> cacheOrdersValueChangeHandler(final String section, final MaterialTextArea input) {
+	private KeyPressHandler cacheOrdersKeyPressHandler(String section, MaterialTextArea input) {
 		return (event) -> {
-			orderCache.put(section, input.getValue());
-		};
-	}
-	
-	private ChangeHandler cacheOrdersChangeHandler(final String section, final MaterialTextArea input) {
-		return (event) -> {
-			orderCache.put(section, input.getValue());
+			Scheduler.get().scheduleDeferred(()->orderCache.put(section, input.getValue()));
 		};
 	}
 
+	private ValueChangeHandler<String> cacheOrdersValueChangeHandler(final String section, final MaterialTextArea input) {
+		return (event) -> {
+			Scheduler.get().scheduleDeferred(()->orderCache.put(section, input.getValue()));
+		};
+	}
+	
 	private static boolean isBlank(String name) {
 		return name == null || name.trim().isEmpty();
 	}
