@@ -13,6 +13,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -214,7 +215,8 @@ public class MainView extends EventBusComposite {
 				} else {
 					input.setValue(part.getOrders(), true);
 				}
-				input.addValueChangeHandler(cacheOrders(part.getSection()));
+				input.addValueChangeHandler(cacheOrdersValueChangeHandler(part.getSection(), input));
+				input.addChangeHandler(cacheOrdersChangeHandler(part.getSection(), input));
 				input.setResizeRule(ResizeRule.AUTO);
 				input.setOverflow(Overflow.AUTO);
 				input.triggerAutoResize();
@@ -305,9 +307,15 @@ public class MainView extends EventBusComposite {
 		display.add(submitPanel);
 	}
 
-	private ValueChangeHandler<String> cacheOrders(final String section) {
+	private ValueChangeHandler<String> cacheOrdersValueChangeHandler(final String section, final MaterialTextArea input) {
 		return (event) -> {
-			orderCache.put(section, event.getValue());
+			orderCache.put(section, input.getValue());
+		};
+	}
+	
+	private ChangeHandler cacheOrdersChangeHandler(final String section, final MaterialTextArea input) {
+		return (event) -> {
+			orderCache.put(section, input.getValue());
 		};
 	}
 
