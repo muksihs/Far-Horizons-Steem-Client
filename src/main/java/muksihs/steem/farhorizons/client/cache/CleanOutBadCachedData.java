@@ -19,9 +19,12 @@ public class CleanOutBadCachedData implements ScheduledCommand {
 			return;
 		}
 		Map<String, String> storage = new StorageMap(localStorageIfSupported);
-		String prefix = "game-";
-		String contains = "planet:";
 		//purge data from previous "planet name" tracking cache data method
+		cleanUp(storage, "game-", "planet:");
+		cleanUp(storage, "planet:", "planet:");
+	}
+
+	private void cleanUp(Map<String, String> storage, String prefix, String contains) {
 		Iterator<String> iKey = storage.keySet().iterator();
 		while (iKey.hasNext()) {
 			String key=iKey.next();
