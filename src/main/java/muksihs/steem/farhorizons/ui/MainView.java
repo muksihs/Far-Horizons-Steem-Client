@@ -14,7 +14,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -85,6 +84,7 @@ public class MainView extends EventBusComposite {
 	private GameStats gameStats;
 
 	private OrderFormCache orderCache;
+
 	@EventHandler
 	protected void updateGameStatus(Event.UpdateGameStats event) {
 		this.gameStats = event.getGameStats();
@@ -132,52 +132,115 @@ public class MainView extends EventBusComposite {
 			return;
 		}
 		/*
-		 * comment bogus auto created jump commands that have ships jumping to a system
-		 * they are alreading located at, also comment out jump commands with "???" as
-		 * the destination
+		 * additional automatic work to have tr2 or pb ships always scan
 		 */
-		for (OrderFormPart part : event.getOrderFormParts()) {
-			if (!part.getSection().equalsIgnoreCase("jumps")) {
-				continue;
+		postArrivalScanFix: for (OrderFormPart part : event.getOrderFormParts()) {
+			if (!part.getSection().equalsIgnoreCase("POST-ARRIVAL")) {
+				continue postArrivalScanFix;
 			}
 			ListIterator<String> iLines = Arrays.asList(StringUtils.splitPreserveAllTokens(part.getOrders(), "\n"))
 					.listIterator();
 			List<String> lines = new ArrayList<>();
-			lines: while (iLines.hasNext()) {
+			// remove existing "scan" orders for "tr1", "tr2", and "pb" ships.
+			stripAutos: while (iLines.hasNext()) {
 				String line = iLines.next();
 				String lcLine = line.trim().toLowerCase();
+				if (lcLine.startsWith("scan ")) {
+					lcLine = lcLine.substring("scan ".length()).trim();
+					if (lcLine.startsWith("tr1 ") || lcLine.startsWith("tr2 ") || lcLine.startsWith("pb ")) {
+						continue stripAutos;
+					}
+				}
+				lines.add(line);
+			}
+			// add new "scan" orders for "tr2" and "pb" ships.
+			for (ShipLocation ship : gameStats.getShipLocations()) {
+				String name = ship.getName();
+				String lcName = name.toLowerCase();
+				if (lcName.startsWith("tr1 ") || lcName.startsWith("tr2 ") || lcName.startsWith("pb ")) {
+					lines.add("     Scan " + name + "; AUTO SCAN");
+				}
+			}
+			part.setOrders(StringUtils.join(lines, "\n"));
+			break postArrivalScanFix;
+		}
+
+		/*
+		 * comment bogus auto created jump commands that have ships jumping to a system
+		 * they are alreading located at, also comment out jump commands with "???" as
+		 * the destination
+		 */
+		jumpsFix: for (OrderFormPart part : event.getOrderFormParts()) {
+			if (!part.getSection().equalsIgnoreCase("JUMPS")) {
+				continue jumpsFix;
+			}
+			ListIterator<String> iLines = Arrays.asList(StringUtils.splitPreserveAllTokens(part.getOrders(), "\n"))
+					.listIterator();
+			List<String> lines = new ArrayList<>();
+			jumpOrders: while (iLines.hasNext()) {
+				boolean wasCommented = false;
+				String line = iLines.next();
+				String lcLine = StringUtils.normalizeSpace(line.trim().toLowerCase());
 				if (lcLine.startsWith(";jump")) {
 					line = line.substring(1);
 					lcLine = lcLine.substring(1);
+					wasCommented = true;
 				}
-				if (lcLine.startsWith("jump")) {
-					String jump = line;
-					if (jump.contains(";")) {
-						jump = StringUtils.substringBefore(jump, ";");
+				if (!lcLine.startsWith("jump ")) {
+					lines.add(line);
+					continue jumpOrders;
+				}
+				String jump = line;
+				if (jump.contains(";")) {
+					jump = StringUtils.substringBefore(jump, ";");
+				}
+				jump = jump.replace(",", ", ").trim().toLowerCase();
+				jump = StringUtils.normalizeSpace(jump);
+				// bad jump check
+				for (ShipLocation ship : gameStats.getShipLocations()) {
+					String badJump = "jump " + ship.getName() + ", " + ship.getPlanet();
+					badJump = StringUtils.normalizeSpace(badJump.trim().toLowerCase());
+					if (badJump.equals(jump)) {
+						line = ";" + line + "; === ALREADY AT THIS LOCATION";
+						lines.add(line);
+						continue jumpOrders;
 					}
-					jump = jump.replace(",", ", ").trim().toLowerCase();
-					jump = StringUtils.normalizeSpace(jump);
-					ships: for (ShipLocation ship : gameStats.getShipLocations()) {
-						String badJump = "jump " + ship.getName() + ", " + ship.getPlanet();
-						badJump = StringUtils.normalizeSpace(badJump.trim().toLowerCase());
-						if (badJump.equals(jump)) {
-							line = ";" + line + "; === ALREADY AT THIS LOCATION";
-							break ships;
+				}
+				if (line.contains(";")) {
+					line = StringUtils.substringBeforeLast(line, ";");
+				}
+				// no jump check, add current location, make sure is commented out
+				if (line.contains(", ???")) {
+					for (ShipLocation ship : gameStats.getShipLocations()) {
+						String noJump = "jump " + ship.getName() + ", ???";
+						noJump = StringUtils.normalizeSpace(noJump.trim().toLowerCase());
+						if (noJump.equals(jump)) {
+							String planet = ship.getPlanet();
+							planet += " [" + ship.getX() + " " + ship.getY() + " " + ship.getZ() + " "+ ship.getP() + "]";
+							line = ";" + line.trim() + "; " + planet;
+							lines.add(line);
+							continue jumpOrders;
 						}
 					}
-					if (jump.contains(", ???")) {
-						if (line.contains(";")) {
-							line = StringUtils.substringBeforeLast(line, ";");
+				}
+				// add current location
+				for (ShipLocation ship : gameStats.getShipLocations()) {
+					String anyJump = "jump " + ship.getName() + ",";
+					anyJump = StringUtils.normalizeSpace(anyJump.trim().toLowerCase());
+					if (jump.startsWith(anyJump)) {
+						String planet = ship.getPlanet();
+						planet += " [" + ship.getX() + " " + ship.getY() + " " + ship.getZ() + " " + ship.getP() + "]";
+						line = line.trim() + "; " + planet;
+						if (wasCommented) {
+							line = ";" + line;
 						}
-						ships: for (ShipLocation ship : gameStats.getShipLocations()) {
-							String noJump = "jump " + ship.getName() + ", ???";
-							noJump = StringUtils.normalizeSpace(noJump.trim().toLowerCase());
-							if (noJump.equals(jump)) {
-								line = ";" + line.trim() + "; " + ship.getPlanet();
-								break ships;
-							}
-						}
+						lines.add(line);
+						continue jumpOrders;
 					}
+				}
+				// pass through existing jump command
+				if (wasCommented) {
+					line = ";" + line;
 				}
 				lines.add(line);
 			}
@@ -297,7 +360,8 @@ public class MainView extends EventBusComposite {
 				MaterialButton namePlanetsBtn = new MaterialButton("Unknown Planets Detected");
 				namePlanetsBtn.setMargin(2);
 				namePlanetsBtn.getElement().getStyle().setBackgroundColor("darkred");
-				namePlanetsBtn.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats, scannedPlanets)));
+				namePlanetsBtn
+						.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats, scannedPlanets)));
 				helpers.add(namePlanetsBtn);
 			}
 		}
@@ -311,16 +375,17 @@ public class MainView extends EventBusComposite {
 
 	private KeyPressHandler cacheOrdersKeyPressHandler(String section, MaterialTextArea input) {
 		return (event) -> {
-			Scheduler.get().scheduleDeferred(()->orderCache.put(section, input.getValue()));
+			Scheduler.get().scheduleDeferred(() -> orderCache.put(section, input.getValue()));
 		};
 	}
 
-	private ValueChangeHandler<String> cacheOrdersValueChangeHandler(final String section, final MaterialTextArea input) {
+	private ValueChangeHandler<String> cacheOrdersValueChangeHandler(final String section,
+			final MaterialTextArea input) {
 		return (event) -> {
-			Scheduler.get().scheduleDeferred(()->orderCache.put(section, input.getValue()));
+			Scheduler.get().scheduleDeferred(() -> orderCache.put(section, input.getValue()));
 		};
 	}
-	
+
 	private static boolean isBlank(String name) {
 		return name == null || name.trim().isEmpty();
 	}
