@@ -550,6 +550,8 @@ public class ExtractDetailedGameInfo {
 	private static GameStats parseSpeciesInformation(String report) {
 		GameStats gameStats = new GameStats();
 		String tmp;
+		tmp = StringUtils.substringBetween(report, "START OF TURN", "\n").trim();
+		gameStats.setTurn(tmp);
 		tmp = StringUtils.substringBetween(report, "START OF TURN", DIVIDER);
 		gameStats.setName(StringUtils.substringBetween(tmp, "Species name:", "\n").trim());
 		gameStats.setGovName(StringUtils.substringBetween(tmp, "Government name:", "\n").trim());

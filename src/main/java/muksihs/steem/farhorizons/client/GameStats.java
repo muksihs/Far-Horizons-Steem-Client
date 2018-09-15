@@ -11,6 +11,7 @@ public class GameStats {
 	private String gamePermLink;
 	private String name;
 	private String govName;
+	private String turn;
 	public String getName() {
 		return name;
 	}
@@ -336,5 +337,11 @@ public class GameStats {
 	}
 	public void setPlayer(String player) {
 		this.player = player;
+	}
+	public String getTurn() {
+		return turn;
+	}
+	public void setTurn(String turn) {
+		this.turn = turn;
 	}
 }

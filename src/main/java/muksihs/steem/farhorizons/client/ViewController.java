@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -247,6 +248,16 @@ public class ViewController implements GlobalEventBus {
 		modal.setFullscreen(true);
 		RootPanel.get().add(modal);
 		modal.open();
+	}
+	
+	@EventHandler
+	protected void setBrowserTitle(Event.SetBrowserTitle event) {
+		if (event.getTitle()!=null && !event.getTitle().trim().isEmpty()) {
+			Window.setTitle(event.getTitle());
+		} else {
+			Window.setTitle("Far Horizons");
+		}
+		
 	}
 
 	@EventHandler

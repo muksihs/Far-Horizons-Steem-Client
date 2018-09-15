@@ -14,6 +14,16 @@ import muksihs.steem.farhorizons.shared.View;
 
 public interface Event {
 
+	public class SetBrowserTitle extends GenericEvent {
+		private final String title;
+		public SetBrowserTitle(String title) {
+			this.title=title;
+		}
+		public String getTitle() {
+			return title;
+		}
+	}
+
 	public class LoadPreviousOrders extends GenericEvent {
 
 		private final String gamemaster;
