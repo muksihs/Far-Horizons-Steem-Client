@@ -16,7 +16,7 @@ if [ ! -s tmp/log.new ]; then exit; fi
 echo "Posting new message"
 msgfile="tmp/msg.txt"
 cp /dev/null "$msgfile"
-echo "title: Updates for $(basename $(pwd)) within the past day. $when"  >> "$msgfile"
+echo "title: Updates for $(basename $(pwd)) within the past day. [$when]"  >> "$msgfile"
 echo "tags: utopian-io steemdev java gwt steem-js"  >> "$msgfile"
 echo "format: markdown"  >> "$msgfile"
 echo "" >> "$msgfile"
@@ -35,7 +35,7 @@ sed -i 's/>/\&gt;/g' "$msgfile"
 sed -i 's/\t/    /g' "$msgfile"
 sed -i 's|  |\&nbsp; |g' "$msgfile"
 java -jar ~/git/SteemCliPoster/build/libs/SteemCliPoster.jar \
-	--auth-file ~/.steem/steem.properties \
+	--auth-file ~/.steem/far-horizons.properties \
 	--no-escape \
 	--file "$msgfile"
 cp tmp/log.new tmp/log.old
