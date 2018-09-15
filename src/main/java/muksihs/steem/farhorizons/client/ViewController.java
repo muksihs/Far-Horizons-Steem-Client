@@ -251,31 +251,37 @@ public class ViewController implements GlobalEventBus {
 
 	@EventHandler
 	protected void helperNamePlanets(Event.HelperNamePlanets event) {
+		List<ScanInfo> scannedPlanets = event.getScannedPlanets();
+		if (scannedPlanets.isEmpty()) {
+			return;
+		}
 		boolean colonizable = event.isColonizable();
-		Iterator<ScanInfo> iScans = event.getScannedPlanets().iterator();
+		Iterator<ScanInfo> iScans = scannedPlanets.iterator();
 		Set<String> alreadyColonized = new HashSet<>();
+		List<PlanetInfo> planetInfo = event.getGameStats().getPlanetInfo();
 		if (colonizable) {
-			for (PlanetInfo info : event.getGameStats().getPlanetInfo()) {
-				alreadyColonized.add(info.getName());
+			for (PlanetInfo info : planetInfo) {
+				if (info.isColony()) {
+					alreadyColonized.add(info.getName());
+				}
 			}
 		}
 		scans: while (iScans.hasNext()) {
 			ScanInfo scan = iScans.next();
 			for (PlanetScan planet : scan.getPlanets()) {
+				String name = planet.getName();
+				boolean isColonizable = planet.isColonizable();
 				if (colonizable) {
-					if (planet.isColonizable() && !alreadyColonized.contains(planet.getName())) {
+					if (isColonizable && !alreadyColonized.contains(name)) {
 						continue scans;
 					}
 				} else {
-					if (isBlank(planet.getName())) {
+					if (isBlank(name)) {
 						continue scans;
 					}
 				}
 			}
 			iScans.remove();
-		}
-		if (event.getScannedPlanets().isEmpty()) {
-			return;
 		}
 		GameState gameState = new GameState(event.getGameStats());
 		List<MaterialTextBox> nameInputs = new ArrayList<>();
@@ -296,7 +302,7 @@ public class ViewController implements GlobalEventBus {
 		instruct2.setFontSize(90, Unit.PCT);
 		instruct2.setTextAlign(TextAlign.CENTER);
 		modal.add(instruct2);
-		iScans = event.getScannedPlanets().iterator();
+		iScans = scannedPlanets.iterator();
 		Set<String> systemsAlready = new HashSet<>();
 		while (iScans.hasNext()) {
 			ScanInfo system = iScans.next();

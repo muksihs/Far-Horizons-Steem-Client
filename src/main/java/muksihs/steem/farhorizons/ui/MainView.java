@@ -2,8 +2,10 @@ package muksihs.steem.farhorizons.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,6 +50,7 @@ import muksihs.steem.farhorizons.client.cache.OrderFormCache;
 import muksihs.steem.farhorizons.client.rsc.OrderFormResources;
 import muksihs.steem.farhorizons.shared.ExtractDetailedGameInfo;
 import muksihs.steem.farhorizons.shared.OrderFormPart;
+import muksihs.steem.farhorizons.shared.PlanetInfo;
 import muksihs.steem.farhorizons.shared.ShipLocation;
 
 public class MainView extends EventBusComposite {
@@ -349,12 +352,20 @@ public class MainView extends EventBusComposite {
 		if (!scannedPlanets.isEmpty()) {
 			boolean showNamePlanetButton = false;
 			boolean showColonizablePlanetButton = false;
+			Set<String> alreadyColonized = new HashSet<>();
+			for (PlanetInfo info : gameStats.getPlanetInfo()) {
+				if (info.isColony()) {
+					alreadyColonized.add(info.getName());
+				}
+			}
 			infoScanCheck: for (ScanInfo scanned : scannedPlanets) {
 				for (PlanetScan scannedPlanet : scanned.getPlanets()) {
-					if (isBlank(scannedPlanet.getName())) {
+					String name = scannedPlanet.getName();
+					boolean colonizable = scannedPlanet.isColonizable();
+					if (isBlank(name)) {
 						showNamePlanetButton = true;
 					}
-					if (scannedPlanet.isColonizable()) {
+					if (colonizable && !alreadyColonized.contains(name)) {
 						showColonizablePlanetButton = true;
 					}
 					if (showNamePlanetButton && showColonizablePlanetButton) {
