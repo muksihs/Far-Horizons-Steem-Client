@@ -538,6 +538,7 @@ public class ExtractDetailedGameInfo {
 				planetInfo.setStarSystem(starSystem);
 				line = StringUtils.substringAfter(line, "#").trim();
 				planetInfo.setPlanetNo(parseInteger(line));
+				planetInfo.setColony(false);
 				line = "PL " + StringUtils.substringAfter(line, "PL ").trim();
 				planetInfo.setName(line);
 				planets.add(planetInfo);

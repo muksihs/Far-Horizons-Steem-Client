@@ -37,6 +37,7 @@ import muksihs.steem.farhorizons.client.Event.ShowShipsAndBases.SortOrder;
 import muksihs.steem.farhorizons.client.GameStats.PlanetScan;
 import muksihs.steem.farhorizons.client.GameStats.ScanInfo;
 import muksihs.steem.farhorizons.client.cache.GameState;
+import muksihs.steem.farhorizons.shared.PlanetInfo;
 import muksihs.steem.farhorizons.shared.ShipLocation;
 import muksihs.steem.farhorizons.ui.AboutUi;
 import muksihs.steem.farhorizons.ui.JoinGameView;
@@ -252,11 +253,17 @@ public class ViewController implements GlobalEventBus {
 	protected void helperNamePlanets(Event.HelperNamePlanets event) {
 		boolean colonizable = event.isColonizable();
 		Iterator<ScanInfo> iScans = event.getScannedPlanets().iterator();
+		Set<String> alreadyColonized = new HashSet<>();
+		if (colonizable) {
+			for (PlanetInfo info : event.getGameStats().getPlanetInfo()) {
+				alreadyColonized.add(info.getName());
+			}
+		}
 		scans: while (iScans.hasNext()) {
 			ScanInfo scan = iScans.next();
 			for (PlanetScan planet : scan.getPlanets()) {
 				if (colonizable) {
-					if (planet.isColonizable()) {
+					if (planet.isColonizable() && !alreadyColonized.contains(planet.getName())) {
 						continue scans;
 					}
 				} else {
