@@ -1,5 +1,6 @@
 package muksihs.steem.farhorizons.client;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -100,7 +101,7 @@ public interface Event {
 		private final boolean colonizable;
 
 		public HelperNamePlanets(GameStats gameStats, List<ScanInfo> scannedPlanets, boolean isColonizable) {
-			this.scannedPlanets = scannedPlanets;
+			this.scannedPlanets = new ArrayList<>(scannedPlanets);
 			this.gameStats = gameStats;
 			this.colonizable=isColonizable;
 		}

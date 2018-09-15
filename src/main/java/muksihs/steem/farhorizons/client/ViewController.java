@@ -346,6 +346,9 @@ public class ViewController implements GlobalEventBus {
 					if (!planet.isColonizable()) {
 						continue;
 					}
+					if (alreadyColonized.contains(planet.getName())) {
+						continue;
+					}
 				}
 				String planetTag = systemTag + " " + planet.getId();
 				MaterialPanel namePanel = new MaterialPanel();
