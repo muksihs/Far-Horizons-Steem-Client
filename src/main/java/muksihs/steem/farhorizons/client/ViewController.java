@@ -255,7 +255,7 @@ public class ViewController implements GlobalEventBus {
 		if (event.getTitle()!=null && !event.getTitle().trim().isEmpty()) {
 			Window.setTitle(event.getTitle());
 		} else {
-			Window.setTitle("Far Horizons");
+			Window.setTitle("Far Horizons Steem");
 		}
 		
 	}
