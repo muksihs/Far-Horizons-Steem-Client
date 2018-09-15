@@ -250,12 +250,19 @@ public class ViewController implements GlobalEventBus {
 
 	@EventHandler
 	protected void helperNamePlanets(Event.HelperNamePlanets event) {
+		boolean colonizable = event.isColonizable();
 		Iterator<ScanInfo> iScans = event.getScannedPlanets().iterator();
 		scans: while (iScans.hasNext()) {
 			ScanInfo scan = iScans.next();
 			for (PlanetScan planet : scan.getPlanets()) {
-				if (isBlank(planet.getName())) {
-					continue scans;
+				if (colonizable) {
+					if (planet.isColonizable()) {
+						continue scans;
+					}
+				} else {
+					if (isBlank(planet.getName())) {
+						continue scans;
+					}
 				}
 			}
 			iScans.remove();
@@ -267,7 +274,11 @@ public class ViewController implements GlobalEventBus {
 		List<MaterialTextBox> nameInputs = new ArrayList<>();
 		MaterialModal modal = new MaterialModal();
 		modal.setFontSize(175, Unit.PCT);
-		MaterialLabel instruct = new MaterialLabel("The following planets need names:");
+		String textInstruct1 = "The following planets need names:";
+		if (colonizable) {
+			textInstruct1 = "The following planets can be colonized:";
+		}
+		MaterialLabel instruct = new MaterialLabel(textInstruct1);
 		instruct.setMargin(4);
 		instruct.setFontSize(125, Unit.PCT);
 		instruct.setFontWeight(FontWeight.BOLD);
@@ -307,6 +318,11 @@ public class ViewController implements GlobalEventBus {
 			coordinates.setTextAlign(TextAlign.CENTER);
 			systemPanel.add(coordinates);
 			for (PlanetScan planet : system.getPlanets()) {
+				if (colonizable) {
+					if (!planet.isColonizable()) {
+						continue;
+					}
+				}
 				String planetTag = systemTag + " " + planet.getId();
 				MaterialPanel namePanel = new MaterialPanel();
 				systemPanel.add(namePanel);

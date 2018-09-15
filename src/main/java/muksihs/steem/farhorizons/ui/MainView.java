@@ -347,21 +347,36 @@ public class MainView extends EventBusComposite {
 
 		List<ScanInfo> scannedPlanets = gameStats.getScannedPlanets();
 		if (!scannedPlanets.isEmpty()) {
-			boolean showButton = false;
+			boolean showNamePlanetButton = false;
+			boolean showColonizablePlanetButton = false;
 			infoScanCheck: for (ScanInfo scanned : scannedPlanets) {
 				for (PlanetScan scannedPlanet : scanned.getPlanets()) {
 					if (isBlank(scannedPlanet.getName())) {
-						showButton = true;
+						showNamePlanetButton = true;
+					}
+					if (scannedPlanet.isColonizable()) {
+						showColonizablePlanetButton = true;
+					}
+					if (showNamePlanetButton && showColonizablePlanetButton) {
+						//no more checking needed
 						break infoScanCheck;
 					}
 				}
 			}
-			if (showButton) {
+			if (showColonizablePlanetButton) {
+				MaterialButton colonizePlanetsBtn = new MaterialButton("Colonizable Planets Detected");
+				colonizePlanetsBtn.setMargin(2);
+				colonizePlanetsBtn.getElement().getStyle().setBackgroundColor("darkgreen");
+				colonizePlanetsBtn
+				.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats, scannedPlanets, true)));
+				helpers.add(colonizePlanetsBtn);
+			}
+			if (showNamePlanetButton) {
 				MaterialButton namePlanetsBtn = new MaterialButton("Unknown Planets Detected");
 				namePlanetsBtn.setMargin(2);
 				namePlanetsBtn.getElement().getStyle().setBackgroundColor("darkred");
 				namePlanetsBtn
-						.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats, scannedPlanets)));
+						.addClickHandler((e) -> fireEvent(new Event.HelperNamePlanets(gameStats, scannedPlanets, false)));
 				helpers.add(namePlanetsBtn);
 			}
 		}

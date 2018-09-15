@@ -87,10 +87,12 @@ public interface Event {
 	public class HelperNamePlanets extends GenericEvent {
 		private final List<ScanInfo> scannedPlanets;
 		private final GameStats gameStats;
+		private final boolean colonizable;
 
-		public HelperNamePlanets(GameStats gameStats, List<ScanInfo> scannedPlanets) {
+		public HelperNamePlanets(GameStats gameStats, List<ScanInfo> scannedPlanets, boolean isColonizable) {
 			this.scannedPlanets = scannedPlanets;
 			this.gameStats = gameStats;
+			this.colonizable=isColonizable;
 		}
 
 		public List<ScanInfo> getScannedPlanets() {
@@ -99,6 +101,10 @@ public interface Event {
 
 		public GameStats getGameStats() {
 			return gameStats;
+		}
+
+		public boolean isColonizable() {
+			return colonizable;
 		}
 
 	}
