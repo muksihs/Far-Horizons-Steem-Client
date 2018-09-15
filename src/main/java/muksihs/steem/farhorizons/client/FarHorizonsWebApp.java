@@ -220,8 +220,12 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 		title.append(this.gameStats.getName());
 		title.append(" @");
 		title.append(this.gameStats.getPlayer());
-		title.append(" - Turn: ");
+		title.append(" - Turn ");
 		title.append(gameStats.getTurn());
+		if (getGameId()!=null&&getGameId().startsWith("game-")) {
+			title.append(" - Game ");
+			title.append(getGameId().substring("game-".length()));
+		}
 		title.append(" - Far Horizons");
 		fireEvent(new Event.SetBrowserTitle(title.toString()));
 		fireEvent(new Event.UpdateGameStats(gameStats));
