@@ -217,11 +217,12 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 		this.gameStats.setGamePermLink(gamePermLink);
 		this.gameStats.setPlayer(username);
 		StringBuilder title = new StringBuilder();
+		title.append("Turn ");
+		title.append(gameStats.getTurn());
+		title.append(" - ");
 		title.append(this.gameStats.getName());
 		title.append(" @");
 		title.append(this.gameStats.getPlayer());
-		title.append(" - Turn ");
-		title.append(gameStats.getTurn());
 		if (getGameId()!=null&&getGameId().startsWith("game-")) {
 			title.append(" - Game ");
 			title.append(getGameId().substring("game-".length()));

@@ -12,6 +12,7 @@ import com.google.web.bindery.event.shared.binder.EventHandler;
 import gwt.material.design.client.ui.MaterialButton;
 import gwt.material.design.client.ui.MaterialPanel;
 import muksihs.steem.farhorizons.client.Event;
+import muksihs.steem.farhorizons.client.FarHorizonsWebApp;
 import muksihs.steem.farhorizons.client.GameStats;
 import muksihs.steem.farhorizons.client.GameStats.TechLevels;
 
@@ -60,6 +61,24 @@ public class TurnResultsUi extends EventBusComposite {
 		StringBuilder stats = new StringBuilder();
 		GameStats gameStats = event.getGameStats();
 		TechLevels techLevels = gameStats.getTechLevels();
+		
+		StringBuilder title = new StringBuilder();
+		title.append(gameStats.getName());
+		title.append(" - ");
+		title.append("Turn ");
+		title.append(gameStats.getTurn());
+		String gameId = FarHorizonsWebApp.getGameId();
+		if (gameId!=null&&gameId.startsWith("game-")) {
+			title.append(" - Game ");
+			title.append(gameId.substring("game-".length()));
+		}
+		title.append(" - ");
+		title.append(" @");
+		title.append(gameStats.getPlayer());
+		
+		stats.append("<h4>");
+		stats.append(title.toString());
+		stats.append("</h4>");
 		stats.append("<span style='font-family: monospace;'>");
 //		stats.append("<strong>");
 //		stats.append(FarHorizonsWebApp.basicEscape(gameStats.getName()).replace(" ", "&nbsp;"));
