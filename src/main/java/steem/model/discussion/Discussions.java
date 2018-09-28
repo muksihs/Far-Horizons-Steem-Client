@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gwt.core.shared.GWT;
 
+import muksihs.steem.farhorizons.shared.FarHorizonsGameData;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Discussions {
 	
@@ -159,6 +161,8 @@ public class Discussions {
 	}
 	@JsonIgnoreProperties(ignoreUnknown=true)
 	public static class JsonMetadata {
+		@JsonProperty("farHorizonsGameData")
+		private FarHorizonsGameData farHorizonsGameData;
 		@JsonProperty("game-data")
 		private String gameData;
 		private Map<String, Object> _properties=new HashMap<>();
@@ -195,6 +199,12 @@ public class Discussions {
 		}
 		public void setGameData(String gameData) {
 			this.gameData = gameData;
+		}
+		public FarHorizonsGameData getFarHorizonsGameData() {
+			return farHorizonsGameData;
+		}
+		public void setFarHorizonsGameData(FarHorizonsGameData farHorizonsGameData) {
+			this.farHorizonsGameData = farHorizonsGameData;
 		}
 	}
 	

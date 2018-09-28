@@ -37,6 +37,7 @@ import muksihs.steem.farhorizons.client.cache.GameState;
 import muksihs.steem.farhorizons.client.rsc.OrderFormResources;
 import muksihs.steem.farhorizons.shared.Consts;
 import muksihs.steem.farhorizons.shared.ExtractDetailedGameInfo;
+import muksihs.steem.farhorizons.shared.FarHorizonsGameData;
 import muksihs.steem.farhorizons.shared.JoinGameInfo;
 import muksihs.steem.farhorizons.shared.OrderFormPart;
 import muksihs.steem.farhorizons.shared.PlanetInfo;
@@ -421,7 +422,15 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 				String msg = content.getBody();
 				String secretMsg;
 				String gameData;
-				String compressedGameData = metadata.getGameData();
+				String compressedGameData = null;
+				
+				FarHorizonsGameData farHorizonsGameData = metadata.getFarHorizonsGameData();
+				if (farHorizonsGameData!=null) {
+					compressedGameData = farHorizonsGameData.getPlayerData();
+				}
+				if (compressedGameData == null) {
+					compressedGameData = metadata.getGameData();
+				}
 				if (compressedGameData == null) {
 					secretMsg = StringUtils.substringBetween(msg, "<div id='secret-message'>", "</div>");
 					if (secretMsg == null) {
