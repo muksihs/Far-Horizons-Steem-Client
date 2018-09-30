@@ -15,6 +15,20 @@ import muksihs.steem.farhorizons.shared.View;
 
 public interface Event {
 
+	public class WantRawTurnResults extends GenericEvent {
+
+	}
+
+	public class ShowRawTurnResults extends GenericEvent {
+		private final String rawReport;
+		public ShowRawTurnResults (String rawReport){
+			this.rawReport=rawReport;
+		}
+		public String getRawReport() {
+			return rawReport;
+		}
+	}
+
 	public class SetBrowserTitle extends GenericEvent {
 		private final String title;
 		public SetBrowserTitle(String title) {

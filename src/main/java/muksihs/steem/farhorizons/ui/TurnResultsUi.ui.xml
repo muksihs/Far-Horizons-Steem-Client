@@ -1,20 +1,27 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:m="urn:import:gwt.material.design.client.ui">
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:m="urn:import:gwt.material.design.client.ui">
 	<ui:style>
 	
 	</ui:style>
 	<m:MaterialPanel>
 		<m:MaterialPanel hideOn="NONE"
 			style='text-align: right; margin-top: 2px;' ui:field="menu">
-			<m:MaterialButton ui:field="pdfManual" style='margin: 2px; background-color: darkblue;'
-				text="PDF Manual" />
-			<m:MaterialButton ui:field="turnResults" style='margin: 2px; background-color: darkblue;'
+			<m:MaterialButton ui:field="pdfManual"
+				style='margin: 2px; background-color: darkblue;' text="PDF Manual" />
+			<m:MaterialButton ui:field="turnResults"
+				style='margin: 2px; background-color: darkblue;'
 				text="Display Turn Results" />
-			<m:MaterialButton ui:field="speciesStatus" style='margin: 2px;  background-color: darkblue;'
+			<m:MaterialButton ui:field="speciesStatus"
+				style='margin: 2px;  background-color: darkblue;'
 				text="Display Species Status" />
-			<m:MaterialButton ui:field="submitOrders" style='margin: 2px;  background-color: darkblue;'
+			<m:MaterialButton ui:field="submitOrders"
+				style='margin: 2px;  background-color: darkblue;'
 				text="Display New Orders Form" />
+			<m:MaterialButton ui:field="rawResults"
+				style='margin: 2px; background-color: darkblue;'
+				text="View RAW Report" />
 		</m:MaterialPanel>
 		<m:MaterialPanel ui:field="gameStatsPanel"
 			style="text-align: center; margin: 2px; padding: 2px;">

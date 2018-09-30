@@ -58,6 +58,46 @@ public class ViewController implements GlobalEventBus {
 		this.view = view;
 		eventBinder.bindEventHandlers(this, eventBus);
 	}
+	
+	@EventHandler
+	protected void showRawResults(Event.ShowRawTurnResults event) {
+		MaterialModal modal = new MaterialModal();
+		modal.setFontSize(175, Unit.PCT);
+		modal.setPadding(4);
+		
+		MaterialPanel panel = new MaterialPanel();
+		panel.setTextAlign(TextAlign.LEFT);
+		String rawReport = event.getRawReport();
+		rawReport=basicEscape(rawReport);
+		rawReport = rawReport.replaceAll("\t", "&nbsp; &nbsp; ");
+		rawReport = rawReport.replaceAll("  ", "&nbsp; ");
+		rawReport = rawReport.replace("\n", "<br/>");
+		panel.add(new HTML("<div style='font-family: monospace;'>" + rawReport + "</div>"));
+		
+		MaterialButton btnDismiss = new MaterialButton("DISMISS");
+		btnDismiss.setMargin(4);
+		btnDismiss.getElement().getStyle().setBackgroundColor("DarkBlue");
+		btnDismiss.addClickHandler((e) -> modal.close());
+
+		MaterialPanel btnPanel = new MaterialPanel();
+		btnPanel.setTextAlign(TextAlign.RIGHT);
+
+		btnPanel.add(btnDismiss);
+
+		modal.add(btnPanel);
+		modal.add(panel);
+
+		modal.addCloseHandler((e) -> {
+			modal.removeFromParent();
+		});
+		modal.setFullscreen(true);
+		RootPanel.get().add(modal);
+		modal.open();
+	}
+
+	private static String basicEscape(String rawReport) {
+		return FarHorizonsWebApp.basicEscape(rawReport);
+	}
 
 	@EventHandler
 	protected void showShipsAndBases(ShowShipsAndBases event) {

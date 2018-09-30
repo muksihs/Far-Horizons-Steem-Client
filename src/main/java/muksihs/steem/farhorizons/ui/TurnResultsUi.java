@@ -24,6 +24,8 @@ public class TurnResultsUi extends EventBusComposite {
 	}
 	
 	@UiField
+	protected MaterialButton rawResults;
+	@UiField
 	protected MaterialButton turnResults;
 	@UiField
 	protected MaterialButton submitOrders;
@@ -36,6 +38,7 @@ public class TurnResultsUi extends EventBusComposite {
 
 	@EventHandler
 	protected void enable(Event.TurnResultsMenuEnable event) {
+		rawResults.setEnabled(event.isEnable());
 		turnResults.setEnabled(event.isEnable());
 		submitOrders.setEnabled(event.isEnable());
 		speciesStatus.setEnabled(event.isEnable());
@@ -43,6 +46,7 @@ public class TurnResultsUi extends EventBusComposite {
 	
 	public TurnResultsUi() {
 		initWidget(uiBinder.createAndBindUi(this));
+		rawResults.addClickHandler((e)->fireEvent(new Event.WantRawTurnResults()));
 		turnResults.addClickHandler((e)->fireEvent(new Event.WantShowTurnResults()));
 		speciesStatus.addClickHandler((e)->fireEvent(new Event.WantSpeciesStatus()));
 		submitOrders.addClickHandler((e)->fireEvent(new Event.WantShowOrdersForm(true)));

@@ -80,6 +80,17 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 	protected String previousOrders;
 
 	private boolean isExpiredTurnAlerted = false;
+	
+	@EventHandler
+	protected void wantRawTurnResults(Event.WantRawTurnResults event) {
+		if (turnResultsReport == null) {
+			return;
+		}
+		if (turnResultsReport.trim().isEmpty()) {
+			return;
+		}
+		fireEvent(new Event.ShowRawTurnResults(turnResultsReport));
+	}
 
 	@EventHandler
 	protected void isMostRecentTurn(Event.MostRecentTurnCheck event) {
@@ -189,7 +200,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 		fireEvent(new Event.ShowSpeciesStatus(turnResultsReport, gameStats));
 	}
 
-	private String basicUnescape(String text) {
+	public static String basicUnescape(String text) {
 		if (text == null) {
 			return null;
 		}
