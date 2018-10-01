@@ -16,12 +16,12 @@
 			<m:MaterialButton ui:field="speciesStatus"
 				style='margin: 2px;  background-color: darkblue;'
 				text="Display Species Status" />
-			<m:MaterialButton ui:field="submitOrders"
-				style='margin: 2px;  background-color: darkblue;'
-				text="Display New Orders Form" />
 			<m:MaterialButton ui:field="rawResults"
 				style='margin: 2px; background-color: darkblue;'
 				text="View RAW Report" />
+			<m:MaterialButton ui:field="submitOrders"
+				style='margin: 2px;  background-color: darkblue;'
+				text="Display New Orders Form" />
 		</m:MaterialPanel>
 		<m:MaterialPanel ui:field="gameStatsPanel"
 			style="text-align: center; margin: 2px; padding: 2px;">
