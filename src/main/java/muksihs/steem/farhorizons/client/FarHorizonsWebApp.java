@@ -448,13 +448,13 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 						fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
 						return;
 					}
-					gameData = LZSEncoding.decompressFromUTF16(basicUnescape(secretMsg));
+					gameData = decompress(secretMsg);
 					if (gameData == null) {
 						fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
 						return;
 					}
 				} else {
-					gameData = LZSEncoding.decompressFromBase64(compressedGameData);
+					gameData = decompress(compressedGameData);
 					if (gameData == null) {
 						fireEvent(new Event.ShowTurnResult("!!! UNABLE TO DISPLAY SPECIES STATUS!"));
 						return;
@@ -518,8 +518,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 					if (body == null) {
 						continue;
 					}
-					body = basicUnescape(body);
-					body = LZSEncoding.decompressFromUTF16(body);
+					body = decompress(body);
 					if (body == null) {
 						continue;
 					}
@@ -861,7 +860,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 
 		final String orders = body.toString();
 
-		String secretMessage = "<html>" + basicEscape(LZSEncoding.compressToUTF16(orders)) + "</html>";
+		String secretMessage = "<html>" + compress(orders) + "</html>";
 		SteemCallback<CommentResult> cb = new SteemCallback<CommentResult>() {
 			@Override
 			public void onResult(JavaScriptObject error, CommentResult result) {
@@ -912,7 +911,7 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 		}
 		final String orders = body.toString();
 
-		String secretMessage = "<html>" + basicEscape(LZSEncoding.compressToUTF16(orders)) + "</html>";
+		String secretMessage = "<html>" + compress(orders) + "</html>";
 		SteemCallback<CommentResult> cb = new SteemCallback<CommentResult>() {
 			@Override
 			public void onResult(JavaScriptObject error, CommentResult result) {
@@ -984,5 +983,28 @@ public class FarHorizonsWebApp implements ScheduledCommand, GlobalEventBus, Valu
 	public static void setGameId(String gameId) {
 		DomGlobal.console.log("=== GAME ID: " + gameId);
 		FarHorizonsWebApp.gameId = gameId;
+	}
+	
+	private static String decompress(String compressed) {
+		if (compressed == null) {
+			return null;
+		}
+		compressed = basicUnescape(compressed);
+		try {
+			return LZSEncoding.decompressFromBase64(compressed);
+		} catch (Exception e) {
+		}
+		try {
+			return LZSEncoding.decompressFromUTF16(compressed);
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	private static String compress(String uncompressed) {
+		if (uncompressed == null) {
+			return null;
+		}
+		return basicEscape(LZSEncoding.compressToBase64(uncompressed));
 	}
 }
