@@ -8,7 +8,7 @@
 
 	<!-- System.getProperties() -->
 	<define-configuration-property name="version" is-multi-valued='false'/>
-	<set-configuration-property name="version" value="20180930"/>
+	<set-configuration-property name="version" value="20181007"/>
 
 	<entry-point class='muksihs.steem.farhorizons.client.FarHorizonsEp' />
 
