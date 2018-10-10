@@ -471,19 +471,92 @@ public class MainView extends EventBusComposite {
 		return null;
 	}
 
-	private void submitOrders(ClickEvent event) {
-		submitBtn.setEnabled(false);
-		resetBtn.setEnabled(false);
+	private void enable(boolean enableOrderForm) {
+		submitBtn.setEnabled(enableOrderForm);
+		resetBtn.setEnabled(enableOrderForm);
 		for (MaterialTextArea part : orderFormParts) {
-			part.setEnabled(false);
+			part.setEnabled(enableOrderForm);
 		}
+	}
+	private void submitOrders(ClickEvent event) {
+		enable(false);
 		List<OrderFormPart> orderFormSections = new ArrayList<>();
+		/*
+		 * Check for malformed message orders
+		 */
+		for (MaterialTextArea part : orderFormParts) {
+			String section = part.getDataAttribute("section").toLowerCase();
+			String dispSection = " [SECTION: "+section.toUpperCase()+"]";
+			String orders = part.getValue().toLowerCase();
+			if (!orders.contains("message") && !orders.contains("zzz")) {
+				continue;
+			}
+			ListIterator<String> iOrders = Arrays.asList(orders.split("\n")).listIterator();
+			boolean message=false;
+			String error = null;
+			iOrders: while (iOrders.hasNext()) {
+				String order = iOrders.next().replaceAll("\\s+", " ").trim();
+				if (message) {
+					if (!section.equalsIgnoreCase("PRE-DEPARTURE") && !section.equalsIgnoreCase("POST-ARRIVAL")) {
+						error="MESSAGES MAY ONLY BE DONE IN: PRE-DEPARTURE or POST-ARRIVAL SECTIONS.";
+						message=false;
+						break iOrders;
+					}
+					if (order.equals("zzz")) {
+						message=false;
+						continue;
+					}
+					if (order.startsWith("message sp")) {
+						error="FOUND START MESSAGE MARKER INSIDE MESSAGE! IF THIS IS WHAT YOU WANT, STICK A '-' OR '.' IN FRONT OF IT.";
+						message=false;
+						break iOrders;
+					}
+//					if (order.contains(";")) {
+//						error="YOUR MESSAGE CONTAINS A ';'. YOUR MESSAGE MIGHT BECOME GARBLED!";
+//						continue;
+//					}
+					if (order.startsWith("zzz")) {
+						error="YOUR MESSAGE END MARKER ZZZ HAS EXTRA STUFF AFTER IT! IT MUST BE BY ITSELF.";
+						message=false;
+						break iOrders;
+					}
+					continue;
+				}
+				if (order.startsWith("message sp")) {
+					message = true;
+					continue;
+				}
+				if (order.startsWith("message")) {
+					error="FOUND START MESSAGE MARKER THAT ISN'T 'MESSAGE SP ...'!";
+					break iOrders;
+				}
+				if (order.startsWith("zzz")) {
+					error="FOUND END MESSAGE MARKER 'ZZZ' WITHOUT A MATCHING START 'MESSAGE SP ...'!";
+					break iOrders;
+				}
+			}
+			if (message) {
+				error="DID NOT FIND END MESSAGE MARKER 'ZZZ'. IT MUST BE ON A LINE ALL BY ITSELF.";
+			}
+			if (error!=null) {
+				enable(true);
+				fireEvent(new Event.AlertMessage(error+dispSection));
+				return;
+			}
+		}
+		
+		/*
+		 * Assemble orders for submission
+		 */
 		for (MaterialTextArea part : orderFormParts) {
 			OrderFormPart ofp = new OrderFormPart();
 			ofp.setSection(part.getDataAttribute("section"));
 			ofp.setOrders(part.getValue());
 			orderFormSections.add(ofp);
 		}
+		
+		
+		
 		fireEvent(new Event.SubmitOrders(orderFormSections));
 	}
 
