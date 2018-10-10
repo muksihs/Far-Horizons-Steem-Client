@@ -507,7 +507,7 @@ public class MainView extends EventBusComposite {
 						continue;
 					}
 					if (order.startsWith("message sp")) {
-						error="FOUND START MESSAGE MARKER INSIDE MESSAGE! IF THIS IS WHAT YOU WANT, STICK A '-' OR '.' IN FRONT OF IT.";
+						error="FOUND START MESSAGE MARKER INSIDE MESSAGE (are you missing a ZZZ?)! IF THIS IS WHAT YOU WANT, STICK A '-' OR '.' IN FRONT OF IT.";
 						message=false;
 						break iOrders;
 					}
