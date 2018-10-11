@@ -522,13 +522,21 @@ public class MainView extends EventBusComposite {
 					}
 					continue;
 				}
-				if (order.startsWith("message sp")) {
+				if (order.startsWith("mes")) {
 					message = true;
+					String tmp = order.replaceAll("mes.*?\\s+(.*)", "$1");
+					if (!tmp.startsWith("sp")){
+						error="FOUND START MESSAGE MARKER THAT ISN'T 'MESSAGE SP ...'!";
+						message = false;
+						break iOrders;
+					}
+					tmp = tmp.substring(2);
+					if (tmp.trim().isEmpty()) {
+						error="MISSING SPECIES NAME FOR MESSAGE!";
+						message = false;
+						break iOrders;
+					}
 					continue;
-				}
-				if (order.startsWith("message")) {
-					error="FOUND START MESSAGE MARKER THAT ISN'T 'MESSAGE SP ...'!";
-					break iOrders;
 				}
 				if (order.startsWith("zzz")) {
 					error="FOUND END MESSAGE MARKER 'ZZZ' WITHOUT A MATCHING START 'MESSAGE SP ...'!";
