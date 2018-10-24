@@ -5,17 +5,22 @@
 	<ui:style>
 	
 	</ui:style>
-	<m:MaterialPanel hideOn="NONE" style='text-align: left;'>
-		<m:MaterialHeader >
-			<m:MaterialNavBar hideOn="NONE" style="margin-bottom: 12px; background-color: darkblue;">
-				<m:MaterialNavSection hideOn="NONE" float="LEFT">
-					<m:MaterialButton style="margin: 2px; margin-left: 8px; background-color: darkblue;"
+	<m:MaterialPanel hideOn="NONE"
+		style='text-align: left;'>
+		<m:MaterialHeader style='margin: 0px; padding: 0px;'>
+			<m:MaterialNavBar layoutPosition='FIXED'
+				activates="sidenavDrawer" hideOn="NONE"
+				style="margin: 0xp; background-color: darkblue;">
+				<m:MaterialNavSection hideOn="NONE"
+					float="LEFT">
+					<m:MaterialButton
+						style="margin: 2px; margin-left: 8px; background-color: darkblue;"
 						ui:field="account" iconType="ACCOUNT_CIRCLE" iconPosition="LEFT"
 						text="Account" />
 				</m:MaterialNavSection>
 				<m:MaterialNavSection float="RIGHT">
-					<m:MaterialNavBrand ui:field="navBrand" style="margin: 6px;"
-						text="Far Horizons Steem Client" />
+					<m:MaterialNavBrand ui:field="navBrand"
+						style="margin: 6px;" text="Far Horizons Steem Client" />
 					<m:MaterialNavContent style="margin: 4px;">
 						<m:MaterialLabel text="for steemit - version: "></m:MaterialLabel>
 						<m:MaterialLabel text="0000000" ui:field="version"></m:MaterialLabel>
@@ -26,6 +31,29 @@
 				</m:MaterialNavSection>
 			</m:MaterialNavBar>
 		</m:MaterialHeader>
-		<m:html.Hr></m:html.Hr>
+		<m:MaterialSideNavDrawer m:id="sidenavDrawer"
+			width="300" style='margin-top: 24px;'
+			showOnAttach="false" withHeader="true"
+			 ui:field="menu" closeOnClick="true">
+			<m:MaterialLink ui:field="turnResults"
+				style='font-size: 140%; font-weight: bold;'
+				text="Display Turn Results" />
+			<m:MaterialLink ui:field="speciesStatus"
+				style='font-size: 140%; font-weight: bold;'
+				text="Display Species Status" />
+			<m:MaterialLink ui:field="submitOrders"
+				style='font-size: 140%; font-weight: bold;'
+				text="Display New Orders Form" />
+			<m:MaterialLink ui:field="rawResults"
+				style='font-size: 140%; font-weight: bold;'
+				text="View RAW Report" />
+			<m:MaterialLink ui:field="pdfManual"
+			style='font-size: 140%; font-weight: bold;'
+			text="PDF Manual" />
+		</m:MaterialSideNavDrawer>
+<!-- 		<m:MaterialPanel style='margin: 0px; padding: 0px; height: 80px; width: 100%;'></m:MaterialPanel> -->
+		<m:MaterialPanel ui:field="gameStatsPanel"
+			style="text-align: center; margin: 2px; padding: 2px; margin-top: 0px; padding-top: 70px;">
+		</m:MaterialPanel>
 	</m:MaterialPanel>
 </ui:UiBinder> 

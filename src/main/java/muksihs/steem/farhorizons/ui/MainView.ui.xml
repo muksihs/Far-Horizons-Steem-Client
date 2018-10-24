@@ -7,7 +7,6 @@
 	</ui:style>
 	<m:MaterialPanel style='margin: 4px; text-align: center;'>
 	<x:HeaderBlock></x:HeaderBlock>
-	<x:TurnResultsUi></x:TurnResultsUi>
 	<m:MaterialPanel hideOn="NONE" style='text-align: left;' ui:field="display"></m:MaterialPanel>
 	</m:MaterialPanel>
 </ui:UiBinder> 
