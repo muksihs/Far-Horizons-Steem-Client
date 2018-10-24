@@ -51,7 +51,6 @@
 			style='font-size: 140%; font-weight: bold;'
 			text="PDF Manual" />
 		</m:MaterialSideNavDrawer>
-<!-- 		<m:MaterialPanel style='margin: 0px; padding: 0px; height: 80px; width: 100%;'></m:MaterialPanel> -->
 		<m:MaterialPanel ui:field="gameStatsPanel"
 			style="text-align: center; margin: 2px; padding: 2px; margin-top: 0px; padding-top: 70px;">
 		</m:MaterialPanel>
